@@ -9,6 +9,32 @@ const productSch = new mongoose.Schema({
         type:Number,
         required:[true, 'Please provide a price']
     },
+    description:{
+        type:String,
+        required:[true, 'Please provide a description']
+    },
+    images:[
+        {
+            description:{
+                type:String,
+                required:[true, "Please provide an image"]
+            },
+            url:{
+                type:String,
+                required:[true, "Please provide an image"]
+            }
+        }
+    ],
+    reviews:[
+        {
+            name:{
+                type:String
+            },
+            comment:{
+                type:String
+            }
+        }
+    ],
     rating:{
         type:Number,
         default:0
@@ -30,4 +56,4 @@ const productSch = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Peoduct', productSch)
+module.exports = mongoose.model('Product', productSch)

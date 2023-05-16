@@ -1,21 +1,27 @@
 const Product = require('../models/productModel')
+const ErrorHandler = require('../utils/errorHandler')
 
-const getProducts = async (req, res)=>{
-    const { name,price } = req.query;
+
+const getProducts = async (req, res, next)=>{
+    const { name,price,fields } = req.query;
     const qParams = {}
-    
 
     if(name){
         qParams.name = { $regex:name, $options:'i' }
     }
 
-    let results = Product.find()
+    let results = Product.find(qParams)
+    
     if(price){
-        results = Product.find(qParams).sort( {price:Number(price)} )
+        results = results.sort( {price:Number(price)} )
+    }
+    if(fields){
+        results = results.select(fields)
     }
     
-    results = await results
-    res.status(200).json(results)
+    const products = await results
+
+    res.status(200).json(products)
 }
 
 const getProductsStatic = async(req, res)=>{
