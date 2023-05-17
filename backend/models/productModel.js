@@ -44,15 +44,16 @@ const productSch = new mongoose.Schema({
         default:Date.now()
     },
     stock:{
-        type:Boolean,
-        default:true
+        type:Number,
+        default:50
     },
     category:{
         type:String,
         enum:{
-            values:['attar', 'deodrant'],
+            values:['attar', 'deodorant', 'perfume'],
             message:'{VALUE} is not available'
-        }
+        },
+        required:[true, "PLease enter a category for the product"]
     }
 })
 

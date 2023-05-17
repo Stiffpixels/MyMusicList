@@ -3,11 +3,15 @@ const ErrorHandler = require('../utils/errorHandler')
 
 
 const getProducts = async (req, res, next)=>{
-    const { name,price,fields } = req.query;
+    const { name, price, fields, category } = req.query;
     const qParams = {}
 
     if(name){
         qParams.name = { $regex:name, $options:'i' }
+    }
+
+    if(category){
+        qParams.category ={ $in: category.split(',') }
     }
 
     let results = Product.find(qParams)
@@ -21,32 +25,68 @@ const getProducts = async (req, res, next)=>{
     
     const products = await results
 
+    if(products.length===0){
+        throw new ErrorHandler("No products found", 404)
+    }
+
     res.status(200).json(products)
 }
 
-const getProductsStatic = async(req, res)=>{
-    /*await Product.insertMany([
-        {
-            name:'Chocolate',
-            price:250,
-            rating:4,
-            category:'attar',
-        },
-        {
-            name:'vanila',
-            price:200,
-            rating:4.5,
-            category:'attar',
-        },
-        {
-            name:'Strawberry',
-            price:350,
-            rating:5,
-            category:'deodrant',
-        }
-    ])*/
+const getProductDetail = async (req, res)=>{
+    const { id } = req.query
+    const product = await Product.findById(id)
+    if(!product){
+        throw new ErrorHandler("No product found with that id", 404)
+    }
+    res.status(200).json(product)
+}
+
+const ProductsStatic = async(req, res)=>{
     const productsFetched = await Product.find()
     res.status(200).json(productsFetched)
 }
 
-module.exports = { getProducts, getProductsStatic }
+const addProduct = async (req, res)=>{
+    const product = await Product.create(req.body)
+
+    if(!product){
+        throw new ErrorHandler("No product found with that id", 404)
+    }
+
+    res.status(200).json({
+        success:true,
+        product
+    })
+}
+
+const updateProduct = async (req, res)=>{
+    const status = await Product.findOneAndUpdate({_id:req.query.id}, req.body, { new:true })
+
+    res.status(200).json({
+        success:true,
+        status
+    })
+}
+
+const deleteProducts = async (req, res)=>{
+    const { id, field } = req.query
+    const product = {}
+    
+    if(id){
+        product.oneProduct = await Product.findOneAndDelete({_id:id})
+    }
+    if(field){
+        const fieldList = field.split(",")
+        const fieldQuery = {}
+        fieldQuery[fieldList[0]] = fieldList[1]
+
+        product.products = await Product.deleteMany(fieldQuery)
+    }
+    res.status(200).json({
+        success:true,
+        product
+    })
+
+}
+
+module.exports = { getProducts, ProductsStatic, getProductDetail, addProduct, updateProduct, deleteProducts }
