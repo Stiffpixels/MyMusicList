@@ -30,7 +30,13 @@ const getProducts = async (req, res, next)=>{
         mongoNumFilters.split(",").map((filter)=>{
             
             const [ field, operator, value ] = filter.split('-')
+            if(qParams.hasOwnProperty(field)){
+                const prevQuery = qParams[field]
+                qParams[field] = {...prevQuery, [operator]:Number9=(value)}
+                return
+            }
             qParams[field] = { [operator]:Number(value) }
+            
         })
         
     }
