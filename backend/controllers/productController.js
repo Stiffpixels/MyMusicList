@@ -6,8 +6,6 @@ const getProducts = async (req, res, next)=>{
     const { name, price, fields, category, numFilters } = req.query;
     const qParams = {}
 
-    
-
     if(name){
         qParams.name = { $regex:name, $options:'i' }
     }
@@ -82,33 +80,53 @@ const addProduct = async (req, res)=>{
     })
 }
 
-const updateProduct = async (req, res)=>{
+//function to generate a mongodb query using switch conditional
+const getQuery = (field)=>{
+    const fieldList = field.split(",")
+    const fieldQuery = {}
+
+    switch(fieldList[0]){
+        case 'name':
+            if(fieldList[1]==='notexists'){
+                fieldQuery.name = { $exists:false }
+            }else{
+                fieldQuery.name = fieldList[1]
+            }
+            break;
+        case 'price':
+            fieldQuery.price = fieldList[1]
+            break;
+        case 'category':
+            fieldQuery.category = fieldList[1]
+            break;
+        case 'rating':
+            fieldQuery.rating = Number(fieldList[1])
+            break;
+        default:
+            throw new ErrorHandler("Please provide a valid field either name, price, category, or rating")
+    }
+
+    return fieldQuery
+}
+
+//updates single or multiple products
+const updateProducts = async (req, res)=>{
     const { id, field } = req.query
     let status;
     const newValues = req.body
-    const fieldQuery = {}
+    
 
     if(id){
          status = await Product.findOneAndUpdate({_id:req.query.id}, newValues, { new:true })
     }
     if(field){
-        const fieldList = field.split(",")
-
-        switch(fieldList[0]){
-            case 'name':
-                fieldQuery.name = fieldList[1]
-                break;
-            case 'price':
-                fieldQuery.price = fieldList[1]
-                break;
-            case 'category':
-                fieldQuery.category = fieldList[1]
-                break;
-            case 'rating':
-                fieldQuery.rating = fieldList[1]
+        const fieldQuery = getQuery(field)
+        const matchedProduct = await Product.find(fieldQuery)
+        
+        if(matchedProduct.length===0){
+            throw new ErrorHandler("No product found with that field value", 404)
         }
         
-        console.log(fieldQuery)
         status = await Product.updateMany( fieldQuery, {$set:newValues},{ multi:true }) 
     }
     
@@ -119,6 +137,7 @@ const updateProduct = async (req, res)=>{
     })
 }
 
+//deletes single or multiple matched documents
 const deleteProducts = async (req, res)=>{
     const { id, field } = req.query
     const product = {}
@@ -127,29 +146,18 @@ const deleteProducts = async (req, res)=>{
         product.oneProduct = await Product.findOneAndDelete({_id:id})
     }
     if(field){
-        const fieldList = field.split(",")
-        const fieldQuery = {}
-
-        switch(fieldList[0]){
-            case 'name':
-                if(fieldList[1]==='notexists'){
-                    fieldQuery.name = { $exists:false }
-                }else{
-                    fieldQuery.name = fieldList[1]
-                }
-                break;
-            case 'price':
-                fieldQuery.price = fieldList[1]
-                break;
-            case 'category':
-                fieldQuery.category = fieldList[1]
-                break;
-            case 'rating':
-                fieldQuery.rating = Number(fieldList[1])
+        const fieldQuery = getQuery(field)
+        const matchedProduct = await Product.find(fieldQuery)
+        
+        if(matchedProduct.length===0){
+            throw new ErrorHandler("No product found with that field value", 404)
         }
         
         product.products = await Product.deleteMany(fieldQuery)
+        
+        
     }
+
     res.status(200).json({
         success:true,
         product
@@ -157,4 +165,4 @@ const deleteProducts = async (req, res)=>{
 
 }
 
-module.exports = { getProducts, ProductsStatic, getProductDetail, addProduct, updateProduct, deleteProducts }
+module.exports = { getProducts, ProductsStatic, getProductDetail, addProduct, updateProducts, deleteProducts }
