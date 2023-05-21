@@ -17,7 +17,7 @@ const productSch = new mongoose.Schema({
         {
             description:{
                 type:String,
-                required:[true, "Please provide an image"]
+                required:[true, "Please provide an image name"]
             },
             url:{
                 type:String,

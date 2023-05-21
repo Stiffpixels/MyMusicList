@@ -3,9 +3,9 @@ const ErrorHandler = require('../utils/errorHandler')
 
 
 const getProducts = async (req, res, next)=>{
-    const { name, price, fields, category, numFilters } = req.query;
+    const { name, price, fields, category, numFilters, page, limit } = req.query;
     const qParams = {}
-
+    const newLimit = Number(limit) || 10
     if(name){
         qParams.name = { $regex:name, $options:'i' }
     }
@@ -43,6 +43,14 @@ const getProducts = async (req, res, next)=>{
 
     let results = Product.find(qParams)
     
+    if(Number(page)>1){
+        const skipItems = page*newLimit
+        console.log(skipItems)
+        results = results.skip(skipItems)
+    }
+
+    results = results.limit(newLimit)
+
     if(price){
         results = results.sort( {price:Number(price)} )
     }
