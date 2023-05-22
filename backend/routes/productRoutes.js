@@ -9,7 +9,7 @@ router.route("/productDetail").get(getProductDetail)
 
 router.route("/product/new").post(addProduct)
 
-router.route("/product/update").put(updateProducts)
+router.route("/products/update").put(updateProducts)
 router.route("/products/delete").delete(deleteProducts)
 
 module.exports = router
