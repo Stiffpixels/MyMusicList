@@ -1,7 +1,8 @@
 const ErrorHandler = require('../utils/errorHandler')
 const User = require('../models/userModel')
+const sendToken = require('../utils/jwtToken')
 
-const addUser = async (req,res)=>{
+const registerUser = async (req,res)=>{
     const { name, email, password } = req.body
 
     const user = await User.create({name, email,password, avatar:{
@@ -9,9 +10,28 @@ const addUser = async (req,res)=>{
         url:'userpfpicurl'
     }})
 
-    const token = user.getJWTToken()
-
-    res.status(201).json({success:true, token})
+    sendToken(user, 201, res)
 }
 
-module.exports = { addUser }
+const loginUser = async (req, res)=>{
+    const { email, password } = req.body
+
+    if(!(email && password)){
+        throw new ErrorHandler('Please enter email and password', 400)
+    }
+    const user = await User.findOne({email}).select("+password")
+
+    if(!user){
+        throw new ErrorHandler('Invalid email or password')
+    }
+    const isPasswordMatched = user.comparePassword(password)
+
+    if(!isPasswordMatched){
+        throw new ErrorHandler('Invalid email or password')
+    }
+
+    sendToken(user, 200, res)
+
+}
+
+module.exports = { registerUser, loginUser }

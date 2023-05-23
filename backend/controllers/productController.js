@@ -64,7 +64,7 @@ const getProducts = async (req, res, next)=>{
         throw new ErrorHandler("No products found", 404)
     }
 
-    res.status(200).json(products)
+    res.status(200).json({ success:true,products })
 }
 
 const getProductDetail = async (req, res)=>{
@@ -73,7 +73,7 @@ const getProductDetail = async (req, res)=>{
     if(!product){
         throw new ErrorHandler("No product found with that id", 404)
     }
-    res.status(200).json(product)
+    res.status(200).json({success:true,product})
 }
 
 const ProductsStatic = async(req, res)=>{
