@@ -1,8 +1,11 @@
 const jwt = require('jsonwebtoken')
+const userModel = require('../models/userModel')
 
-const isAuthorizedUser = ()=>{
+const isAuthorizedUser = async (req, res, next)=>{
     const { token } = req.cookies
-    console.log(token)
+    const decodedData = jwt.verify(token, process.env.JWT_SECRET)
+    req.user = await userModel.findById(decodedData.id)
+    next()
 }
 
 module.exports = isAuthorizedUser
