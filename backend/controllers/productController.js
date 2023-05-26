@@ -82,6 +82,9 @@ const ProductsStatic = async(req, res)=>{
 }
 
 const addProduct = async (req, res)=>{
+
+    req.body.user = req.user._id
+    
     const product = await Product.create(req.body)
 
     if(!product){

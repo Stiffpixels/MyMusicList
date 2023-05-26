@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const userModel = require('../models/userModel')
+const ErrorHandler = require('../utils/errorHandler')
 
 const isAuthorizedUser = async (req, res, next)=>{
     const { token } = req.cookies
@@ -8,4 +9,13 @@ const isAuthorizedUser = async (req, res, next)=>{
     next()
 }
 
-module.exports = isAuthorizedUser
+const authorizeRoles = (...roles)=>{
+    return (req, res, next)=>{
+        if(!roles.includes(req.user.role)){
+            throw new ErrorHandler(`The role ${req.user.role} does not have access to this resource`, 403)
+        }
+        next()
+    }
+}
+
+module.exports = { isAuthorizedUser, authorizeRoles }
