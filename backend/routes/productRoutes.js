@@ -8,9 +8,9 @@ router.route("/products").get(getProducts)
 router.route("/productsStatic").get(ProductsStatic)
 router.route("/productDetail").get(getProductDetail)
 
-router.route("/product/new").post(isAuthorizedUser,authorizeRoles('admin'),addProduct)
+router.route("/admin/product/new").post(isAuthorizedUser,authorizeRoles('admin'),addProduct)
 
-router.route("/products/update").put(isAuthorizedUser,authorizeRoles('admin'),updateProducts)
-router.route("/products/delete").delete(isAuthorizedUser, authorizeRoles('admin'), deleteProducts)
+router.route("/admin/products/update").put(isAuthorizedUser,authorizeRoles('admin'),updateProducts)
+router.route("/admin/products/delete").delete(isAuthorizedUser, authorizeRoles('admin'), deleteProducts)
 
 module.exports = router

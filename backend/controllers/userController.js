@@ -130,4 +130,16 @@ const logoutUser = async (req,res)=>{
     sendToken(user, 200, res)
  }
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUserDetails, updateUserPassword }
+ const updateUserDetails = async (req, res)=>{
+    if(req.body.name){
+        req.user.name = req.body.name
+    }
+    if(req.body.email){
+        req.user.email = req.body.email
+    }
+    await req.user.save()
+
+    sendToken(req.user, 200, res)
+ }
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUserDetails, updateUserPassword, updateUserDetails }
