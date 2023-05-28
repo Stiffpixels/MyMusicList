@@ -4,6 +4,11 @@ const ErrorHandler = require('../utils/errorHandler')
 
 const isAuthorizedUser = async (req, res, next)=>{
     const { token } = req.cookies
+
+    if(!token){
+        throw new ErrorHandler('Please login or register first', 500)
+    }
+
     const decodedData = jwt.verify(token, process.env.JWT_SECRET)
     req.user = await userModel.findById(decodedData.id)
     next()

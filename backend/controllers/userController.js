@@ -101,4 +101,33 @@ const logoutUser = async (req,res)=>{
 
  }
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword }
+ const getUserDetails = async (req,res)=>{
+    const user = await User.findOne({_id:req.user.id})
+
+    res.status(200).json({
+        success:true,
+        user
+    })
+ }
+
+ const updateUserPassword = async (req,res)=>{
+    const user = await User.findOne({_id:req.user.id}).select('+password')
+
+    const isPasswordMatched = await user.comparePassword(req.body.currentPassword)
+
+    if(!isPasswordMatched){
+        throw new ErrorHandler('Current Password and entered password does not match', 500)
+    }
+
+    if(req.body.password !== req.body.confirmPassword){
+        throw new ErrorHandler('Both the Passwords entered do not match', 500)
+    }
+
+    user.password = req.body.password
+
+    await user.save()
+
+    sendToken(user, 200, res)
+ }
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUserDetails, updateUserPassword }
