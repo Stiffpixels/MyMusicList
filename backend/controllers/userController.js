@@ -3,6 +3,7 @@ const User = require('../models/userModel')
 const sendToken = require('../utils/jwtToken')
 const sendEMail= require('../utils/sendEmail.js')
 const crypto = require('crypto')
+const { send } = require('process')
 
 const registerUser = async (req,res)=>{
     const { name, email, password } = req.body
@@ -110,6 +111,27 @@ const logoutUser = async (req,res)=>{
     })
  }
 
+ const getUsers = async (req, res)=>{
+    const { id } = req.query
+    let users
+    if(id){
+        users = await User.findOne({_id:id})
+        if(!users){
+            throw new ErrorHandler('user with given id does not exists', 500)
+        }
+    }
+    else{
+        users = await User.find()
+    }
+
+    res.status(200).json({
+        success:true,
+        users
+    })
+
+    
+ }
+
  const updateUserPassword = async (req,res)=>{
     const user = await User.findOne({_id:req.user.id}).select('+password')
 
@@ -142,4 +164,44 @@ const logoutUser = async (req,res)=>{
     sendToken(req.user, 200, res)
  }
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUserDetails, updateUserPassword, updateUserDetails }
+ const updateUserRoles = async (req, res)=>{
+    const { name, email, role } = req.body
+    const user = await User.findOne({_id:req.params.id})
+
+    if(!user){
+        throw new ErrorHandler('please enter a valid id', 500)
+    }
+
+    if(name){
+        user.name = name
+    }
+    if(email){
+        user.email = email
+    }
+    if(role){
+        user.role = role
+    }
+    
+
+    await user.save({ validateBeforeSave:false })
+
+    res.status(200).json({
+        success:true
+    })
+ }
+
+ const deleteUser = async (req, res)=>{
+    const user =await User.findById(req.params.id)
+
+    if(!user){
+        throw new ErrorHandler('please enter a valid id', 500)
+    }
+
+    await user.deleteOne()
+
+    res.status(200).json({
+        success:true
+    })
+ }
+
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser }
