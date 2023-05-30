@@ -182,4 +182,41 @@ const deleteProducts = async (req, res)=>{
 
 }
 
-module.exports = { getProducts, ProductsStatic, getProductDetail, addProduct, updateProducts, deleteProducts }
+const createUpdateReview = async (req, res)=>{
+    const { rating, comment, productId } = req.body
+
+    if(!(rating && productId )){
+        throw new ErrorHandler('Please enter rating and product ID', 500)
+    }
+
+    const review = {
+        user:req.user.id,
+        name:req.user.name,
+        rating:Number(rating),
+        comment
+    }
+
+    const product = await Product.findById(productId)
+const isReviewed = product.reviews.find(rev=> rev.user.toString() === req.user.id)
+
+    if(isReviewed){
+        product.reviews.forEach((rev)=>{
+            if(product.reviews.find(rev=> rev.user.toString() === req.user.id)){
+                rev.rating = rating
+                rev.comment = comment
+            }
+        })
+    }else{
+        product.reviews.push(review)
+        product.numOfReviews += 1
+    }
+
+    await product.save({validateBeforeSave:false})
+
+    res.status(200).json({
+        success:true,
+        product
+    })
+}
+
+module.exports = { getProducts, ProductsStatic, getProductDetail, addProduct, updateProducts, deleteProducts, createUpdateReview }

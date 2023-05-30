@@ -18,8 +18,6 @@ router.route('/update/password').post(isAuthorizedUser, updateUserPassword)
 router.route('/update/details').post(isAuthorizedUser, updateUserDetails)
 router.route('/admin/user/:id').put(isAuthorizedUser, authorizeRoles('admin'), updateUserRoles ).delete(isAuthorizedUser, authorizeRoles('admin'), deleteUser )
 
-
-
 router.route('/admin/users').get(isAuthorizedUser, authorizeRoles('admin'), getUsers)
 
 module.exports = router
