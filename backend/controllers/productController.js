@@ -211,6 +211,13 @@ const isReviewed = product.reviews.find(rev=> rev.user.toString() === req.user.i
         product.numOfReviews += 1
     }
 
+    let avgRating=0;
+    product.reviews.forEach(rev=>{
+        avgRating += rev.rating
+    })
+    avgRating /= product.numOfReviews
+    product.ratings= avgRating
+
     await product.save({validateBeforeSave:false})
 
     res.status(200).json({
