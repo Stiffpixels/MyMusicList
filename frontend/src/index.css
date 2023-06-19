@@ -40,6 +40,7 @@ img{
 .navbar-brand{
   font-weight: 700;
   font-family: 'roboto', sans-serif;
+  letter-spacing: 1px;
 }
 
 .nav-item{
@@ -98,10 +99,11 @@ img{
   border:1.5px solid black;
   text-decoration: none;
   color: black;
+  border: 2px solid black ;
 }
 
 .pnf-btn:hover{
-  background: goldenrod;
+  background: black;
   color: white;
 }
 
@@ -124,6 +126,60 @@ img{
 }
 
 
+
+/* form */
+
+.form-container{
+  margin: 3.5em 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.field-text{
+  display: block;
+  font-size: .85rem;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+.form{
+  background-color: whitesmoke;
+  padding: 5em;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.field-input{
+  border:0;
+  background-color: whitesmoke;
+  border-bottom: 2px solid black;
+  padding: .2em;
+}
+
+.submit-btn{
+  margin-top: 1em;
+  padding:.2em .5em;
+  border: 2px solid black ;
+  background-color: whitesmoke;
+}
+
+.submit-btn:hover, .submit-btn:hover{
+  background-color: black;
+  color: whitesmoke;
+}
+
+.form-title{
+  text-transform:uppercase;
+  margin-bottom :1em;
+  font-family: 'Roboto Condensed', sans-serif;
+  color: orangered;
+  font-weight: bold;
+  font-size: 2rem;
+  letter-spacing: 1px;
+}
+
 @media only screen and (min-width: 900px) {
   #root{
     grid-template-columns: 10em 1fr 10em;
@@ -135,4 +191,5 @@ img{
   }
 
   .active{ border-bottom: 1px solid black; }
+
 }

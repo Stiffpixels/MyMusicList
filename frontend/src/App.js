@@ -6,6 +6,8 @@ import About from './components/pages/about'
 import Contact from './components/pages/contact'
 import PageNotFound from './components/pages/pageNotFound'
 import PrivacyPolicy from './components/pages/privacyPolicy'
+import Register from './components/pages/Register';
+import Login from './components/pages/Login';
 
 function App() {
   return <>
@@ -15,6 +17,8 @@ function App() {
     <Route path='/contact' element={<Contact />} />
     <Route path='*' element={<PageNotFound />} />
     <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
+    <Route path='/register' element={<Register />} />
+    <Route path='/login' element={<Login />} />
   </Routes>
 
   </>
