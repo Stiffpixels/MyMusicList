@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '../layout/layout'
+import Layout from '../components/layout/layout'
 import {BsTelephone, BsPhone} from 'react-icons/bs'
 
 import {AiOutlineMail} from 'react-icons/ai'

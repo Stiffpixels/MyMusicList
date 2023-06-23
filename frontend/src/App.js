@@ -1,13 +1,13 @@
 import './App.css';
 //import Layout from './components/layout/layout.js'
 import {Routes, Route} from 'react-router-dom'
-import HomePage from './components/pages/home'
-import About from './components/pages/about'
-import Contact from './components/pages/contact'
-import PageNotFound from './components/pages/pageNotFound'
-import PrivacyPolicy from './components/pages/privacyPolicy'
-import Register from './components/pages/Register';
-import Login from './components/pages/Login';
+import HomePage from './pages/home'
+import About from './pages/about'
+import Contact from './pages/contact'
+import PageNotFound from './pages/pageNotFound'
+import PrivacyPolicy from './pages/privacyPolicy'
+import Register from './pages/Register';
+import Login from './pages/Login';
 
 function App() {
   return <>

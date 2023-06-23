@@ -3,6 +3,7 @@ const app = express()
 require('express-async-errors')
 const errorMiddleware = require("./middleware/errMiddleware")
 const cookieParser = require('cookie-parser')
+const cors  = require('cors')
 
 //route imports
 const productRouter = require("./routes/productRoutes")
@@ -11,6 +12,7 @@ const userRouter = require("./routes/userRoutes")
 //middleware
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors({credentials:true, origin:'http://localhost:3000'}))
 
 //routes
 app.use("/api/v1", productRouter)

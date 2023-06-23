@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '../layout/layout'
+import Layout from '../components/layout/layout'
 import {Link} from 'react-router-dom'
 
 const pageNotFound = () => {

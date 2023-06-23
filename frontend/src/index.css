@@ -9,6 +9,9 @@ font-family: 'Roboto Condensed', sans-serif;
   padding:0;
   box-sizing: border-box;
 }
+
+
+
 img{
   width:100%;
 }
@@ -143,7 +146,7 @@ img{
 }
 
 .form{
-  background-color: whitesmoke;
+  background-color: rgb(236, 236, 236);
   padding: 5em;
   border-radius: 10px;
   display: flex;
@@ -153,7 +156,7 @@ img{
 
 .field-input{
   border:0;
-  background-color: whitesmoke;
+  background-color: rgb(236, 236, 236);
   border-bottom: 2px solid black;
   padding: .2em;
 }

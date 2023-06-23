@@ -10,7 +10,7 @@ process.on('uncaughtException', (err)=>{
 
 dotenv.config({path:'backend/config/config.env'})
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 8080
 
 const start = async ()=>{
     await connDB(process.env.MONGO_URI)

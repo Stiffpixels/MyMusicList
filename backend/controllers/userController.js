@@ -3,17 +3,24 @@ const User = require('../models/userModel')
 const sendToken = require('../utils/jwtToken')
 const sendEMail= require('../utils/sendEmail.js')
 const crypto = require('crypto')
-const { send } = require('process')
 
 const registerUser = async (req,res)=>{
     const { name, email, password } = req.body
+
+    const existingUser = await User.findOne({ email })
+    if(existingUser){
+        throw new ErrorHandler('This email is already in use.', 500)
+    }
 
     const user = await User.create({name, email,password, avatar:{
         public_id:'sample id',
         url:'userpfpicurl'
     }})
 
-    sendToken(user, 201, res)
+    res.status(200).json({
+        success:true,
+        message:'Registration complete'
+    })
 }
 
 const loginUser = async (req, res)=>{
@@ -27,7 +34,7 @@ const loginUser = async (req, res)=>{
     if(!user){
         throw new ErrorHandler('Invalid email or password')
     }
-    const isPasswordMatched = user.comparePassword(password)
+    const isPasswordMatched = await user.comparePassword(password)
 
     if(!isPasswordMatched){
         throw new ErrorHandler('Invalid email or password')

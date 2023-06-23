@@ -9,7 +9,7 @@ const sendToken = (user, statusCode, res)=>{
 
     const token = user.getJWTToken()
 
-    res.status(statusCode).cookie('token', token, options).json({
+    res.cookie('token', token, options).status(statusCode).json({
         success:true,
         user,
         token
