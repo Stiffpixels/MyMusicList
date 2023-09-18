@@ -1,19 +1,23 @@
 const mongoose = require('mongoose')
 
-const productSch = new mongoose.Schema({
+const musicSch = new mongoose.Schema({
     name:{
         type:String,
         required:[true, 'Please provide a name']
     },
-    price:{
-        type:Number,
+    artist:{
+        type:String,
         required:[true, 'Please provide a price']
     },
     description:{
         type:String,
         required:[true, 'Please provide a description']
     },
-    images:[
+    album:{
+      type:String,
+      required:[true, 'Please provide an album name.']
+    },
+    image:[
         {
             description:{
                 type:String,
@@ -28,7 +32,7 @@ const productSch = new mongoose.Schema({
     user:{
         type:mongoose.Schema.ObjectId,
         ref:"user",
-        required:true
+        //required:true,
     },
     numOfReviews:{
         type:Number,
@@ -53,7 +57,7 @@ const productSch = new mongoose.Schema({
             }
         }
     ],
-    ratings:{
+    rating:{
         type:Number,
         default:0
     },
@@ -61,18 +65,10 @@ const productSch = new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
-    stock:{
-        type:Number,
-        default:50
-    },
     category:{
         type:String,
-        enum:{
-            values:['attar', 'deodorant', 'perfume'],
-            message:'{VALUE} is not available'
-        },
-        required:[true, "PLease enter a category for the product"]
+        required:[true, "PLease enter a category for the music"]
     }
 })
 
-module.exports = mongoose.model('Product', productSch)
+module.exports = mongoose.model('music', musicSch)

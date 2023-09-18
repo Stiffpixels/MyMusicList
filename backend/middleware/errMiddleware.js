@@ -3,7 +3,7 @@ const ErrorHandler = require('../utils/errorHandler')
 module.exports = (err,req,res,next)=>{
     err.statusCode = err.statusCode || 500
     err.message = err.message || "Internal server error"
-
+    console.log(err)
     if(err.name==="CastError"){
         const message = `resource not found, Invalid ${err.path}`
         err = new ErrorHandler(message, 400)

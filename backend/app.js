@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const cors  = require('cors')
 
 //route imports
-const productRouter = require("./routes/productRoutes")
+const musicRouter = require("./routes/musicRoutes")
 const userRouter = require("./routes/userRoutes")
 
 //middleware
@@ -15,7 +15,7 @@ app.use(cookieParser())
 app.use(cors({credentials:true, origin:'http://localhost:3000'}))
 
 //routes
-app.use("/api/v1", productRouter)
+app.use("/api/v1", musicRouter)
 app.use("/api/v1", userRouter)
 
 //error handler middleware

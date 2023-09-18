@@ -1,9 +1,9 @@
-const Product = require('../models/productModel')
+const music = require('../models/musicModel')
 const ErrorHandler = require('../utils/errorHandler')
 
 
-const getProducts = async (req, res, next)=>{
-    const { name, price, fields, category, numFilters, page, limit } = req.query;
+const getmusic = async (req, res, next)=>{
+    const { name, fields, category, numFilters, page, limit } = req.query;
     const qParams = {}
     const newLimit = Number(limit) || 10
     if(name){
@@ -41,7 +41,7 @@ const getProducts = async (req, res, next)=>{
         
     }
 
-    let results = Product.find(qParams)
+    let results = music.find(qParams)
     
     if(Number(page)>1){
         const skipItems = page*newLimit
@@ -51,49 +51,58 @@ const getProducts = async (req, res, next)=>{
 
     results = results.limit(newLimit)
 
-    if(price){
-        results = results.sort( {price:Number(price)} )
-    }
+    
     if(fields){
         results = results.select(fields)
     }
     
-    const products = await results
+    const Music = await results
 
-    if(products.length===0){
-        throw new ErrorHandler("No products found", 404)
+    if(Music.length===0){
+        throw new ErrorHandler("No music found", 404)
     }
 
-    res.status(200).json({ success:true,products })
+    res.status(200).json({ success:true,Music })
 }
 
-const getProductDetail = async (req, res)=>{
+const getmusicDetail = async (req, res)=>{
     const { id } = req.query
-    const product = await Product.findById(id)
-    if(!product){
-        throw new ErrorHandler("No product found with that id", 404)
+    const Music = await music.findById(id)
+    if(!Music){
+        throw new ErrorHandler("No music found with that id", 404)
     }
-    res.status(200).json({success:true,product})
+    console.log(typeof Music.createdAt)
+    res.status(200).json({success:true,Music})
 }
 
-const ProductsStatic = async(req, res)=>{
-    const productsFetched = await Product.find()
-    res.status(200).json(productsFetched)
+const musicStatic = async(req, res)=>{
+    const musicFetched = await music.find()
+    res.status(200).json({musicFetched})
 }
 
-const addProduct = async (req, res)=>{
+const getTrendingMusic = async (req, res)=>{
+  const dateLimit = new Date(Date.now() - 15 * 1000 * 60 * 60 * 24).toISOString().split('T')[0]
+  console.log(dateLimit)
+  const Music = await music.find({createdAt:{ $gte: dateLimit }}).find({
+    rating:{ $gte: 4},
+    numOfReviews:{ $gte: 20 }
+  })
+  res.status(200).json({message:'success', Music})
+}
+
+const addmusic = async (req, res)=>{
 
     req.body.user = req.user._id
     
-    const product = await Product.create(req.body)
+    const music = await music.create(req.body)
 
-    if(!product){
-        throw new ErrorHandler("No product found with that id", 404)
+    if(!music){
+        throw new ErrorHandler("Music Could not be created check the fields.", 404)
     }
 
     res.status(200).json({
         success:true,
-        product
+        music
     })
 }
 
@@ -126,25 +135,25 @@ const getQuery = (field)=>{
     return fieldQuery
 }
 
-//updates single or multiple products
-const updateProducts = async (req, res)=>{
+//updates single or multiple music
+const updatemusic = async (req, res)=>{
     const { id, field } = req.query
     let status;
     const newValues = req.body
     
 
     if(id){
-         status = await Product.findOneAndUpdate({_id:req.query.id}, newValues, { new:true })
+         status = await music.findOneAndUpdate({_id:req.query.id}, newValues, { new:true })
     }
     if(field){
         const fieldQuery = getQuery(field)
-        const matchedProduct = await Product.find(fieldQuery)
+        const matchedmusic = await music.find(fieldQuery)
         
-        if(matchedProduct.length===0){
-            throw new ErrorHandler("No product found with that field value", 404)
+        if(matchedmusic.length===0){
+            throw new ErrorHandler("No music found with that field value", 404)
         }
         
-        status = await Product.updateMany( fieldQuery, {$set:newValues},{ multi:true }) 
+        status = await music.updateMany( fieldQuery, {$set:newValues},{ multi:true }) 
     }
     
 
@@ -155,38 +164,38 @@ const updateProducts = async (req, res)=>{
 }
 
 //deletes single or multiple matched documents
-const deleteProducts = async (req, res)=>{
+const deletemusic = async (req, res)=>{
     const { id, field } = req.query
-    const product = {}
+    const music = {}
     
     if(id){
-        product.oneProduct = await Product.findOneAndDelete({_id:id})
+        music.onemusic = await music.findOneAndDelete({_id:id})
     }
     if(field){
         const fieldQuery = getQuery(field)
-        const matchedProduct = await Product.find(fieldQuery)
+        const matchedmusic = await music.find(fieldQuery)
         
-        if(matchedProduct.length===0){
-            throw new ErrorHandler("No product found with that field value", 404)
+        if(matchedmusic.length===0){
+            throw new ErrorHandler("No music found with that field value", 404)
         }
         
-        product.products = await Product.deleteMany(fieldQuery)
+        music.music = await music.deleteMany(fieldQuery)
         
         
     }
 
     res.status(200).json({
         success:true,
-        product
+        music
     })
 
 }
 
 const createUpdateReview = async (req, res)=>{
-    const { rating, comment, productId } = req.body
+    const { rating, comment, musicId } = req.body
 
-    if(!(rating && productId )){
-        throw new ErrorHandler('Please enter rating and product ID', 500)
+    if(!(rating && musicId )){
+        throw new ErrorHandler('Please enter rating and music ID', 500)
     }
 
     const review = {
@@ -196,34 +205,34 @@ const createUpdateReview = async (req, res)=>{
         comment
     }
 
-    const product = await Product.findById(productId)
-const isReviewed = product.reviews.find(rev=> rev.user.toString() === req.user.id)
+    const music = await music.findById(musicId)
+const isReviewed = music.reviews.find(rev=> rev.user.toString() === req.user.id)
 
     if(isReviewed){
-        product.reviews.forEach((rev)=>{
-            if(product.reviews.find(rev=> rev.user.toString() === req.user.id)){
+        music.reviews.forEach((rev)=>{
+            if(music.reviews.find(rev=> rev.user.toString() === req.user.id)){
                 rev.rating = rating
                 rev.comment = comment
             }
         })
     }else{
-        product.reviews.push(review)
-        product.numOfReviews += 1
+        music.reviews.push(review)
+        music.numOfReviews += 1
     }
 
     let avgRating=0;
-    product.reviews.forEach(rev=>{
+    music.reviews.forEach(rev=>{
         avgRating += rev.rating
     })
-    avgRating /= product.numOfReviews
-    product.ratings= avgRating
+    avgRating /= music.numOfReviews
+    music.ratings= avgRating
 
-    await product.save({validateBeforeSave:false})
+    await music.save({validateBeforeSave:false})
 
     res.status(200).json({
         success:true,
-        product
+        music
     })
 }
 
-module.exports = { getProducts, ProductsStatic, getProductDetail, addProduct, updateProducts, deleteProducts, createUpdateReview }
+module.exports = { getmusic, musicStatic, getmusicDetail, addmusic, updatemusic, deletemusic, createUpdateReview, getTrendingMusic }
