@@ -12,6 +12,7 @@ font-family: 'Roboto Condensed', sans-serif;
 
 
 
+
 img{
   width:100%;
 }
@@ -44,6 +45,11 @@ img{
   font-weight: 700;
   font-family: 'roboto', sans-serif;
   letter-spacing: 1px;
+  text-transform: none;
+}
+
+.navbar-brand-title{
+  color:orangered;
 }
 
 .nav-item{

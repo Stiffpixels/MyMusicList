@@ -3,10 +3,8 @@ import Layout from '../components/layout/layout'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/auth'
 
 const Login = () => {
-    const [auth, setAuth] = useAuth()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
@@ -19,11 +17,7 @@ const Login = () => {
 
             if(resp.data.success){
                 setTimeout(()=>toast.success("Login successful"), 500)
-
-                setAuth({
-                    ...auth,
-                    token:resp.data.token
-                })
+                
                 localStorage.setItem('auth', JSON.stringify(resp.data))
                 navigate('/')
             }
