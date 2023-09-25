@@ -1,10 +1,31 @@
 import React from 'react'
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link,useNavigate } from 'react-router-dom'
+import { useAuth } from '../../context/auth.js'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 import {GiDelicatePerfume, GiShoppingCart} from 'react-icons/gi'
 import {FaMusic} from 'react-icons/fa'
 
-const header = () => {
+const Header = () => {
+  const [auth, setAuth] = useAuth()
+  const navigate = useNavigate()
+  const handleLogout= async()=>{
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/logout`)
+      if(res.data.success){
+        setAuth({...auth, user:null})
+        localStorage.removeItem('auth')
+        setTimeout(()=>toast.success("Logout successful"), 500)
+        navigate('/')
+      }
+    }catch(error){
+      console.log(error)
+      toast.error(error.response.data.message)
+    }
+    
+  }
+  
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
@@ -22,12 +43,17 @@ const header = () => {
         <li className="nav-item">
           <NavLink to='/contact' className="nav-link">Contact</NavLink>
         </li>
-        <li className="nav-item">
+        {(!auth.user)?(<><li className="nav-item">
           <NavLink to='/register' className="nav-link">Register</NavLink>
         </li>
         <li className="nav-item">
           <NavLink to='/login' className="nav-link" >Login</NavLink>
-        </li>
+        </li></>):(<li className="nav-item">
+          <NavLink to='/' onClick={handleLogout} className="nav-link" >Logout</NavLink>
+        </li>)
+          
+        }
+        
       </ul>
       <form className="d-flex" role="search">
         <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
@@ -41,4 +67,4 @@ const header = () => {
   )
 }
 
-export default header
+export default Header

@@ -3,22 +3,24 @@ import Layout from '../components/layout/layout'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/auth.js'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [auth, setAuth] = useAuth()
     const navigate = useNavigate()
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
         try{
             const resp = await axios.post(`${process.env.REACT_APP_API}/api/v1/login`, { email, password }, { withCredentials:true })
-            console.log(resp)
 
             if(resp.data.success){
                 setTimeout(()=>toast.success("Login successful"), 500)
                 
                 localStorage.setItem('auth', JSON.stringify(resp.data))
+                setAuth(resp.data.user)
                 navigate('/')
             }
 
