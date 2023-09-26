@@ -9,7 +9,7 @@ const AuthProvider = ({children})=>{
       const parsedData = "true" === localStorage.getItem('auth')
       if(parsedData){
         setAuth({
-          user:parsedData.user
+          user:parsedData
         })
       }
     },[isAuthNull])

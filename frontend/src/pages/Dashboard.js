@@ -11,6 +11,7 @@ const Dashboard = ()=>{
       const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`, { withCredentials:true})
       if(res.data.success){
         user = res.data.user
+        console.log('its true')
       }
     }catch(error){
       console.log(error)
@@ -25,7 +26,7 @@ const Dashboard = ()=>{
   <span className="visually-hidden">Loading...</span>
 </div>
 </div>):(
-    <Layout title="My Profile" description="Your profile information">
+    <Layout title="My Profile " description="Your profile information">
       <h1>My Profile </h1>
     </Layout>)}
     </>)
