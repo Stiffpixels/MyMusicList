@@ -43,6 +43,7 @@ const Header = () => {
         <li className="nav-item">
           <NavLink to='/contact' className="nav-link">Contact</NavLink>
         </li>
+        
         {(!auth.user)?(<><li className="nav-item">
           <NavLink to='/register' className="nav-link">Register</NavLink>
         </li>
@@ -51,7 +52,6 @@ const Header = () => {
         </li></>):(<li className="nav-item">
           <NavLink to='/' onClick={handleLogout} className="nav-link" >Logout</NavLink>
         </li>)
-          
         }
         
       </ul>

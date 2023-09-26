@@ -4,9 +4,9 @@ const AuthContext = createContext()
 
 const AuthProvider = ({children})=>{
     const [auth,setAuth] = useState({})
-    const isAuthNull = auth.user===null
+    const isAuthNull = auth.user===false
     useEffect(()=>{
-      const parsedData = JSON.parse(localStorage.getItem('auth'))
+      const parsedData = "true" === localStorage.getItem('auth')
       if(parsedData){
         setAuth({
           user:parsedData.user

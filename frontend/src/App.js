@@ -8,6 +8,8 @@ import PageNotFound from './pages/pageNotFound'
 import PrivacyPolicy from './pages/privacyPolicy'
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard.js'
+
 
 function App() {
   return <>
@@ -19,6 +21,7 @@ function App() {
     <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
     <Route path='/register' element={<Register />} />
     <Route path='/login' element={<Login />} />
+    <Route path='/dashboard' element={<Dashboard/>} />
   </Routes>
 
   </>

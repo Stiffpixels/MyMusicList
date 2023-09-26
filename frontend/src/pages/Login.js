@@ -19,8 +19,8 @@ const Login = () => {
             if(resp.data.success){
                 setTimeout(()=>toast.success("Login successful"), 500)
                 
-                localStorage.setItem('auth', JSON.stringify(resp.data))
-                setAuth(resp.data.user)
+                localStorage.setItem('auth', true)
+                setAuth({user:true})
                 navigate('/')
             }
 
