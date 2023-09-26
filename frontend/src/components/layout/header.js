@@ -4,13 +4,13 @@ import { useAuth } from '../../context/auth.js'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-import {GiDelicatePerfume, GiShoppingCart} from 'react-icons/gi'
 import {FaMusic} from 'react-icons/fa'
 
 const Header = () => {
   const [auth, setAuth] = useAuth()
   const navigate = useNavigate()
-  const handleLogout= async()=>{
+  const handleLogout= async(e)=>{
+
     try{
       const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/logout`)
       if(res.data.success){
@@ -48,9 +48,9 @@ const Header = () => {
           <NavLink to='/register' className="nav-link">Register</NavLink>
         </li>
         <li className="nav-item">
-          <NavLink to='/login' className="nav-link" >Login</NavLink>
+          <NavLink to='/login' className="nav-link " >Login</NavLink>
         </li></>):(<li className="nav-item">
-          <NavLink to='/' onClick={handleLogout} className="nav-link" >Logout</NavLink>
+          <NavLink to='/logout' onClick={(e)=>handleLogout(e)} className="nav-link"  >Logout</NavLink>
         </li>)
         }
         

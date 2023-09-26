@@ -69,6 +69,6 @@ const musicSch = new mongoose.Schema({
         type:String,
         required:[true, "PLease enter a category for the music"]
     }
-})
+}, {collection:'music'})
 
 module.exports = mongoose.model('music', musicSch)

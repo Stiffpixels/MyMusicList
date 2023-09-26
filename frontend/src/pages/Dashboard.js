@@ -20,14 +20,14 @@ const Dashboard = ()=>{
   }
   renderDashboard()
   return(<>
-    {!(user==={})?(
+    {user==={}?(
     <div className="spinner">
     <div className=" spinner-border" role="status">
   <span className="visually-hidden">Loading...</span>
 </div>
 </div>):(
     <Layout title="My Profile " description="Your profile information">
-      <h1>My Profile </h1>
+      <img src={require("./images/profilePic.jpg")} alt="image as a test" />
     </Layout>)}
     </>)
 }
