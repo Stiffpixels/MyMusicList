@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Layout from '../components/layout/layout'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/auth.js'
 
 const Login = () => {
@@ -45,6 +45,7 @@ const Login = () => {
                 <div className='submit-btn-container'>
                 <button type="submit" className='submit-btn' >Login</button>
                 </div>
+                <Link to="/password/forgot" className="forgot-password"><a href="/password/forgot" >Forgot password</a></Link> 
             </form>
         </div>
     </Layout>

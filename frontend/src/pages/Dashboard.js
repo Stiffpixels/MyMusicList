@@ -1,35 +1,46 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Layout from '../components/layout/layout.js'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavLink } from 'react-router-dom'
 
 const Dashboard = ()=>{
   const navigate = useNavigate()
-  let user = {}
+  const [user, setUser] = useState({})
   const renderDashboard= async ()=>{
     try{
       const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`, { withCredentials:true})
       if(res.data.success){
-        user = res.data.user
-        console.log('its true')
+        setUser(res.data.user)
+        console.log(user)
       }
     }catch(error){
       console.log(error)
-      navigate('/login')
+      //navigate('/login')
     }
   }
   renderDashboard()
-  return(<>
-    {user==={}?(
-    <div className="spinner">
-    <div className=" spinner-border" role="status">
-  <span className="visually-hidden">Loading...</span>
-</div>
-</div>):(
-    <Layout title="My Profile " description="Your profile information">
-      <img src={require("./images/profilePic.jpg")} alt="image as a test" />
-    </Layout>)}
-    </>)
+  return <>
+ <Layout title="My Profile " description="Your profile information">
+  <div className="flex-row">
+      <div className="flex-col border border-dark rounded text-center">
+        <p className="list-item">
+        <NavLink to="/dashboard/general" >General</NavLink>
+        </p>
+        <p className="list-item">
+        <NavLink to="/dashboard/my-list">My List</NavLink>
+        </p>
+      </div>
+      
+      <div className="flex-col">
+        <img src={require("./images/profilePic.jpg")} alt="Female profile picture."/>
+        
+      </div>
+    </div>
+    {user.role==="admin"?(<>
+    
+    </>):(<h2>User Page</h2>)}
+  </Layout>
+</>
 }
 
 export default Dashboard

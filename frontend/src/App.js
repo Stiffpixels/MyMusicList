@@ -9,7 +9,11 @@ import PrivacyPolicy from './pages/privacyPolicy'
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard.js'
-
+import Forgotpassword from './pages/Forgotpassword.js'
+import Resetpassword from './pages/Resetpassword.js'
+import Privateroute from './components/Private routes/Privateroute.js'
+import General from "./pages/General.js"
+import MyList from "./pages/MyList.js"
 
 function App() {
   return <>
@@ -19,9 +23,17 @@ function App() {
     <Route path='/contact' element={<Contact />} />
     <Route path='*' element={<PageNotFound />} />
     <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
+    <Route path="/dashboard" element={<Privateroute />} >
+      <Route path='' element={<Dashboard/>} />
+      <Route path='general' element={<General/>} />
+      <Route path='my-list' element={<MyList/>} />
+    </Route>
+    
     <Route path='/register' element={<Register />} />
     <Route path='/login' element={<Login />} />
-    <Route path='/dashboard' element={<Dashboard/>} />
+    
+    <Route path='/password/forgot' element={<Forgotpassword/>} />
+    <Route path='/password/reset/:token' element={<Resetpassword/>} />
   </Routes>
 
   </>

@@ -11,6 +11,8 @@ const AuthProvider = ({children})=>{
         setAuth({
           user:parsedData
         })
+      }else{
+        setAuth({...auth, user:false })
       }
     },[isAuthNull])
     return (

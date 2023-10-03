@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink, Link,useNavigate } from 'react-router-dom'
+import { NavLink, Link } from 'react-router-dom'
 import { useAuth } from '../../context/auth.js'
 import axios from 'axios'
 import toast from 'react-hot-toast'
@@ -8,16 +8,15 @@ import {FaMusic} from 'react-icons/fa'
 
 const Header = () => {
   const [auth, setAuth] = useAuth()
-  const navigate = useNavigate()
   const handleLogout= async(e)=>{
-
+    e.preventDefault()
     try{
       const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/logout`)
       if(res.data.success){
-        setAuth({...auth, user:null})
+        setAuth({...auth, user:false})
         localStorage.removeItem('auth')
         setTimeout(()=>toast.success("Logout successful"), 500)
-        navigate('/')
+        
       }
     }catch(error){
       console.log(error)
@@ -30,7 +29,7 @@ const Header = () => {
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">
   <div className="container-fluid">
-  <Link to='/' className="navbar-brand"><FaMusic/><span className="navbar-brand-title">MyMusicList</span></Link>
+  <Link to='/' className="navbar-brand"><FaMusic/><span className="navbar-brand-title">&nbsp;MyMusicList</span></Link>
     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
       <span className="navbar-toggler-icon" />
     </button>
@@ -49,8 +48,14 @@ const Header = () => {
         </li>
         <li className="nav-item">
           <NavLink to='/login' className="nav-link " >Login</NavLink>
-        </li></>):(<li className="nav-item">
-          <NavLink to='/logout' onClick={(e)=>handleLogout(e)} className="nav-link"  >Logout</NavLink>
+        </li></>):(<li className="nav-item dropdown">
+          <Link className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            User
+          </Link>
+          <ul className="dropdown-menu">
+          <li><NavLink className="dropdown-item" to="/dashboard">Profile</NavLink></li>
+            <li><NavLink to='/logout' onClick={(e)=>handleLogout(e)} className="dropdown-item"  >Logout</NavLink></li>
+          </ul>
         </li>)
         }
         
