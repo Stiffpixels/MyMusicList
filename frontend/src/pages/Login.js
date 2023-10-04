@@ -42,10 +42,10 @@ const Login = () => {
                     <label htmlFor="password" className="field-text">Password: </label>
                     <input className='field-input'value={ password } type="password" name='password' id='password' onChange={(e)=>setPassword(e.target.value)} />
                 </p>
+                <Link to="/password/forgot" className="forgot-password"><a href="/password/forgot" >Forgot password</a></Link>
                 <div className='submit-btn-container'>
                 <button type="submit" className='submit-btn' >Login</button>
                 </div>
-                <Link to="/password/forgot" className="forgot-password"><a href="/password/forgot" >Forgot password</a></Link> 
             </form>
         </div>
     </Layout>

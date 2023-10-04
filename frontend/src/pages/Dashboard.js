@@ -1,12 +1,15 @@
 import React,{useState} from 'react'
 import Layout from '../components/layout/layout.js'
 import axios from 'axios'
-import { useNavigate, NavLink } from 'react-router-dom'
 import Profmenu from "../components/Profmenu"
+import toast from 'react-hot-toast'
 
 const Dashboard = ()=>{
-  const navigate = useNavigate()
   const [user, setUser] = useState({})
+  const handleSubmit = (e)=>{
+    e.preventDefault()
+    toast.success(`Name: ${name} Email: ${email}`)
+  }
   const renderDashboard= async ()=>{
     try{
       const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`, { withCredentials:true})
@@ -20,13 +23,39 @@ const Dashboard = ()=>{
     }
   }
   renderDashboard()
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   return <>
  <Layout title="My Profile " description="Your profile information">
     <Profmenu />
-    <div class="form">
-      <p>Name: {user.name}</p>
-      <p>Email: {user.email}</p>
+    <div className="form-container" style={{width:"100%", margin:'0'}}>
+    <section className='form profile-container' >
+    <img className="profile-image" src={require("./images/profilePic.jpg")} alt="Female profile picture."/>
+    <div className="profile-details">
+      <p className='profile-text' >{user.name}</p>
+      <p className='profile-text' >{user.email}</p>
     </div>
+
+    </section>
+    </div>
+    <div className="form-container" style={{width:'100%', margin:'0', marginBottom:'3em'}}>
+    <form className='form' onSubmit={e=>handleSubmit(e)}>
+    <h3 style={{textTransform:"uppercase"}}>Edit Profile</h3>
+    <p className="form-field">
+      <label htmlFor="name" className="field-text profile-field-text"  >Name: </label>
+      <input className='field-input' value={user.name} type="name" name='name' id='name' onChange={e=>setName(e.target.value)}  />
+    </p>
+    <p className="form-field">
+      <label htmlFor="email" className="field-text profile-field-text">Email: </label>
+      <input className='field-input' type="email" value={user.email} name='email' id='email' onChange={e=>setEmail(e.target.value)}  />
+    </p>
+    <div className='submit-btn-container'>
+      <button type="submit" className='submit-btn' >Submit</button>
+      </div>
+    </form>
+    </div>
+    
+
   </Layout>
 </>
 }

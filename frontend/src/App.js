@@ -12,8 +12,8 @@ import Dashboard from './pages/Dashboard.js'
 import Forgotpassword from './pages/Forgotpassword.js'
 import Resetpassword from './pages/Resetpassword.js'
 import Privateroute from './components/Private routes/Privateroute.js'
-import General from "./pages/General.js"
-import MyList from "./pages/MyList.js"
+import Currentlist from "./pages/Currentlist.js"
+import Completedlist from "./pages/Completedlist.js"
 
 function App() {
   return <>
@@ -25,8 +25,9 @@ function App() {
     <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
     <Route path="/dashboard" element={<Privateroute />} >
       <Route path='' element={<Dashboard/>} />
-      <Route path='general' element={<General/>} />
-      <Route path='my-list' element={<MyList/>} />
+      <Route path='general' element={<Dashboard/>} />
+      <Route path='current-list' element={<Currentlist/>} />
+      <Route path='completed-list' element={<Completedlist/>} />
     </Route>
     
     <Route path='/register' element={<Register />} />

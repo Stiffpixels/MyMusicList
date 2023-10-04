@@ -177,19 +177,31 @@ img{
 /* form */
 
 .form-container{
-  margin: 3.5em 0;
+  width: 55%;
+  margin: 4.5em auto;
   display: flex;
   justify-content: center;
   align-items: center;
+
+}
+
+.form-field:first-child{
+  margin-top:0;
+}
+
+.form-field{
+  margin-top:0.5em;
 }
 
 .field-text{
   display: block;
   font-size: .85rem;
   font-family: 'Roboto Condensed', sans-serif;
+  margin-top:.5em;
 }
 
 .form{
+  width: 100%;
   background-color: rgb(236, 236, 236);
   border-radius: 10px;
   display: flex;
@@ -246,8 +258,30 @@ img{
 
 .forgot-password{
   display:inline-block;
-  align-self:end;
   margin-top:1.5em;
+  font-size: .75rem;
+}
+
+/*Dashboard*/
+
+.profile-container{
+  margin: 1em 0;
+  flex-direction: row;
+  justify-content: start;
+  align-items: start;
+}
+.profile-image{
+  width: 5em;
+  margin-left: 2em;
+  border-radius:50%;
+}
+.profile-text{
+  align-self:center;
+  margin-left:2em;
+  font-size: 1.25rem;
+}
+
+.profile-field-text{
   font-size: .75rem;
 }
 
