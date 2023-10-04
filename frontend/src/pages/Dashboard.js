@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import Layout from '../components/layout/layout.js'
 import axios from 'axios'
 import { useNavigate, NavLink } from 'react-router-dom'
+import Profmenu from "../components/Profmenu"
 
 const Dashboard = ()=>{
   const navigate = useNavigate()
@@ -21,24 +22,11 @@ const Dashboard = ()=>{
   renderDashboard()
   return <>
  <Layout title="My Profile " description="Your profile information">
-  <div className="flex-row">
-      <div className="flex-col border border-dark rounded text-center">
-        <p className="list-item">
-        <NavLink to="/dashboard/general" >General</NavLink>
-        </p>
-        <p className="list-item">
-        <NavLink to="/dashboard/my-list">My List</NavLink>
-        </p>
-      </div>
-      
-      <div className="flex-col">
-        <img src={require("./images/profilePic.jpg")} alt="Female profile picture."/>
-        
-      </div>
+    <Profmenu />
+    <div class="form">
+      <p>Name: {user.name}</p>
+      <p>Email: {user.email}</p>
     </div>
-    {user.role==="admin"?(<>
-    
-    </>):(<h2>User Page</h2>)}
   </Layout>
 </>
 }
