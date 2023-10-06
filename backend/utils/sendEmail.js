@@ -15,7 +15,7 @@ const sendEMail = async (options) =>{
     })
 
     const mailOptions = {
-        from:`'Scentuary Attars' <${process.env.SMTP_EMAIL}>`,
+        from:`'My Music List' <${process.env.SMTP_EMAIL}>`,
         to:options.email,
         subject:options.subject,
         text:options.message

@@ -3,13 +3,17 @@ import Layout from '../components/layout/layout.js'
 import axios from 'axios'
 import Profmenu from "../components/Profmenu"
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 const Dashboard = ()=>{
   const [user, setUser] = useState({})
+  const navigate = useNavigate
+  
   const handleSubmit = (e)=>{
     e.preventDefault()
     toast.success(`Name: ${name} Email: ${email}`)
   }
+
   const renderDashboard= async ()=>{
     try{
       const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`, { withCredentials:true})
@@ -19,12 +23,12 @@ const Dashboard = ()=>{
       }
     }catch(error){
       console.log(error)
-      //navigate('/login')
+      navigate('/login')
     }
   }
   renderDashboard()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+  const [name, setName] = useState(user.name)
+  const [email, setEmail] = useState(user.email)
   return <>
  <Layout title="My Profile " description="Your profile information">
     <Profmenu />
@@ -43,11 +47,11 @@ const Dashboard = ()=>{
     <h3 style={{textTransform:"uppercase"}}>Edit Profile</h3>
     <p className="form-field">
       <label htmlFor="name" className="field-text profile-field-text"  >Name: </label>
-      <input className='field-input' value={user.name} type="name" name='name' id='name' onChange={e=>setName(e.target.value)}  />
+      <input className='field-input' value={name} type="name" name='name' id='name' onChange={e=>setName(e.target.value)}  />
     </p>
     <p className="form-field">
       <label htmlFor="email" className="field-text profile-field-text">Email: </label>
-      <input className='field-input' type="email" value={user.email} name='email' id='email' onChange={e=>setEmail(e.target.value)}  />
+      <input className='field-input' type="email" value={email} name='email' id='email' onChange={e=>setEmail(e.target.value)}  />
     </p>
     <div className='submit-btn-container'>
       <button type="submit" className='submit-btn' >Submit</button>

@@ -8,7 +8,7 @@ import { useAuth } from '../context/auth.js'
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [auth, setAuth] = useAuth()
+    const [ auth, setAuth] = useAuth()
     const navigate = useNavigate()
 
     const handleSubmit = async (e)=>{
@@ -26,7 +26,7 @@ const Login = () => {
 
         }catch(error){
             console.log(error)
-            toast.error(error.response.data.message)
+            toast.error("incorrect email or password ")
         }
     }
   return (
