@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
             type:String,
             required:[true, "Please provide a public id"]
         },
-        url:{
+        img:{
             type:String,
             required:[true, "Please provide an image"]
         }

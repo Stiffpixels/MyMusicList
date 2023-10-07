@@ -18,7 +18,6 @@ const Dashboard = ()=>{
         const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`, { withCredentials:true})
         if(res.data.success){
           setUser(res.data.user)
-          console.log(user)
         }
       }catch(error){
         console.log(error)

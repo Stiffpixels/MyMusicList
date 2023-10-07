@@ -7,8 +7,8 @@ import toast from 'react-hot-toast';
 //import ImageSlider from '../layout/ImageSlider.js'
 
 const Home = () => {
-  const [ data, setData ] = useState({})
-  const fetchData = async ()=>{
+  const [ data, setData ] = useState([])
+  const fetchData =async ()=>{
   try {
       const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/music`)
       if(res.data.success){
@@ -20,18 +20,20 @@ const Home = () => {
   }
   
   useEffect(()=>{
-    async function getres(){
-      await fetchData()
-    }
-    getres()
-    console.log(data);
+    fetchData()
   }, [])
   
 
 
   return (
     <Layout title="Best Place to Keep your Music Organized" keywords="Music, Music List, Indian Website" description="home page of My Music List" author="Muzammil">
-      
+      <div className='form-container'>
+        <div className="form">
+          
+          <p>{data[0].name}</p>
+          
+        </div>
+      </div>
       
     </Layout>
   )

@@ -148,12 +148,17 @@ const updatemusic = async (req, res)=>{
     if(field){
         const fieldQuery = getQuery(field)
         const matchedmusic = await music.find(fieldQuery)
-        
+
         if(matchedmusic.length===0){
             throw new ErrorHandler("No music found with that field value", 404)
         }
-        
-        status = await music.updateMany( fieldQuery, {$set:newValues},{ multi:true }) 
+
+        if(newValues.image){
+            console.log('image')
+        }else{
+            status = await music.updateMany( fieldQuery, {$set:newValues},{ multi:true })
+        }
+         
     }
     
 
