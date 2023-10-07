@@ -11,18 +11,6 @@ const Home = () => {
     {url:'./images/perfume1.jpg', alt:'perfume showcase'}
   ]*/
   const [ data, setData ] = useState({})
-  const getData = async ()=>{
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API}/api/v1/music`)
-      if(response.data.success){
-        setData(response.data.Music)
-        console.log(data)
-      }
-    } catch (error) {
-      toast.error("server error")
-    }
-    
-  }
 
 
   return (

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect } from 'react'
 import Layout from '../components/layout/layout.js'
 import axios from 'axios'
 import Profmenu from "../components/Profmenu"
@@ -14,19 +14,20 @@ const Dashboard = ()=>{
     toast.success(`Name: ${name} Email: ${email}`)
   }
 
-  const renderDashboard= async ()=>{
-    try{
-      const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`, { withCredentials:true})
-      if(res.data.success){
-        setUser(res.data.user)
-        console.log(user)
-      }
-    }catch(error){
-      console.log(error)
-      navigate('/login')
+  useEffect(()=>{
+    const asyncFunc = async ()=>{
+      try{
+        const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`, { withCredentials:true})
+        if(res.data.success){
+          setUser(res.data.user)
+          console.log(user)
+        }
+      }catch(error){
+        console.log(error)
     }
-  }
-  renderDashboard()
+    }
+    asyncFunc()
+  }, [])
   const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
   return <>
@@ -34,7 +35,8 @@ const Dashboard = ()=>{
     <Profmenu />
     <div className="form-container" style={{width:"100%", margin:'0'}}>
     <section className='form profile-container' >
-    <img className="profile-image" src={require("./images/profilePic.jpg")} alt="Female profile picture."/>
+    <div className="profile-image"><img src={require('./images/profilePic.jpg')} alt="female profile picture" /></div>
+    
     <div className="profile-details">
       <p className='profile-text' >{user.name}</p>
       <p className='profile-text' >{user.email}</p>
