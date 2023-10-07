@@ -3,11 +3,9 @@ import Layout from '../components/layout/layout.js'
 import axios from 'axios'
 import Profmenu from "../components/Profmenu"
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
 
 const Dashboard = ()=>{
   const [user, setUser] = useState({})
-  const navigate = useNavigate
   
   const handleSubmit = (e)=>{
     e.preventDefault()

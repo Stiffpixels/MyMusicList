@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Layout from '../components/layout/layout'
 import 'react-slideshow-image/dist/styles.css';
 import axios from 'axios';
@@ -7,10 +7,26 @@ import toast from 'react-hot-toast';
 //import ImageSlider from '../layout/ImageSlider.js'
 
 const Home = () => {
-  /*const slides = [
-    {url:'./images/perfume1.jpg', alt:'perfume showcase'}
-  ]*/
   const [ data, setData ] = useState({})
+  const fetchData = async ()=>{
+  try {
+      const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/music`)
+      if(res.data.success){
+        setData(res.data.Music)
+      }
+  } catch (error) {
+      console.log(error);
+  }
+  }
+  
+  useEffect(()=>{
+    async function getres(){
+      await fetchData()
+    }
+    getres()
+    console.log(data);
+  }, [])
+  
 
 
   return (
