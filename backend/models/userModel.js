@@ -30,8 +30,8 @@ const userSchema = new mongoose.Schema({
             required:[true, "Please provide a public id"]
         },
         img:{
-            type:String,
-            required:[true, "Please provide an image"]
+            data:Buffer,
+            contentType:String
         }
     },
     role:{

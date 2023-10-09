@@ -1,11 +1,10 @@
 const ErrorHandler = require('../utils/errorHandler')
+const path = require("path")
 const User = require('../models/userModel')
 const sendToken = require('../utils/jwtToken')
 const sendEMail= require('../utils/sendEmail.js')
 const crypto = require('crypto')
-const multer = require('multer')
-const storage = multer.memoryStorage()
-const upload = multer({storage})
+
 
 const registerUser = async (req,res)=>{
     const { name, email, password } = req.body
@@ -173,7 +172,8 @@ const logoutUser = async (req,res)=>{
     if(req.body.email){
         req.user.email = req.body.email
     }
-    if(req.body.image){
+    console.log(req.file)
+    if(req.file){
         console.log(req.file)
     }
     await req.user.save()

@@ -5,6 +5,7 @@ const errorMiddleware = require("./middleware/errMiddleware")
 const cookieParser = require('cookie-parser')
 const cors  = require('cors')
 
+
 //route imports
 const musicRouter = require("./routes/musicRoutes")
 const userRouter = require("./routes/userRoutes")
