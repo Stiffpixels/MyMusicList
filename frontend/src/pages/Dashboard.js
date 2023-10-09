@@ -6,12 +6,28 @@ import toast from 'react-hot-toast'
 
 const Dashboard = ()=>{
   const [user, setUser] = useState({})
+  const [name, setName] = useState(user.name)
+  const [email, setEmail] = useState(user.email)
+  const [image, setImage] = useState({ preview: '', data: '' })
   
-  const handleSubmit = (e)=>{
+  const handleSubmit = async (e)=>{
     e.preventDefault()
     toast.success(`Name: ${name} Email: ${email}`)
-  }
+    let formData = new FormData()
+    formData.append("image", image)
 
+    formData.append('file', image.data)
+    const response = await axios.post(`${process.env.REACT_APP_API}/api/v1/update/details`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+    if (response) toast.success("response received")
+
+  }
+  const handleFileChange = (e)=>{
+    const img = {
+      preview: URL.createObjectURL(e.target.files[0]),
+      data: e.target.files[0],
+    }
+    setImage(img)
+  }
   useEffect(()=>{
     const asyncFunc = async ()=>{
       try{
@@ -25,8 +41,8 @@ const Dashboard = ()=>{
     }
     asyncFunc()
   }, [])
-  const [name, setName] = useState(user.name)
-  const [email, setEmail] = useState(user.email)
+  
+
   return <>
  <Layout title="My Profile " description="Your profile information">
     <Profmenu />
@@ -52,13 +68,16 @@ const Dashboard = ()=>{
       <label htmlFor="email" className="field-text profile-field-text">Email: </label>
       <input className='field-input' type="email" value={email} name='email' id='email' onChange={e=>setEmail(e.target.value)}  />
     </p>
+    <p>
+      <input type='file' name='file' onChange={e=>handleFileChange(e)}></input>
+    </p>
+
     <div className='submit-btn-container'>
       <button type="submit" className='submit-btn' >Submit</button>
-      </div>
+    </div>
     </form>
     </div>
     
-
   </Layout>
 </>
 }

@@ -30,7 +30,9 @@ const Home = () => {
       <div className='form-container'>
         <div className="form">
           
-          <p>{data[0].name}</p>
+          {
+            JSON.stringify(data)==="{}"?( <p>{data[0].name}</p>):( <p>no music found</p>)
+          }
           
         </div>
       </div>
