@@ -23,14 +23,14 @@ const Dashboard = ()=>{
   
   const handleSubmit = async (e)=>{
     e.preventDefault()
-    toast.success(`Name: ${name} Email: ${email}`)
+    
     if(image.data.size>1*1000*1024){
       toast.error('Image size cannot be more than 1MB')
       return
     }
     let formData = new FormData()
-    formData.append(name, name)
-    formData.append(email, email)
+    formData.append("name", name)
+    formData.append("email", email)
     formData.append("profile_pic", image)
     formData.append('profile_pic', image.data)
     try{
@@ -75,9 +75,9 @@ const Dashboard = ()=>{
     <Profmenu />
     <div className="form-container" style={{width:"100%", margin:'0'}}>
     <section className='form profile-container' >
+    
     <div className="profile-image">
       <img src={`data:image/jpg;base64,${binToBase64(user?.avatar?.img?.data?.data)}`} alt="female profile picture" />
-    
     </div>
 
     

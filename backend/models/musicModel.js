@@ -17,18 +17,16 @@ const musicSch = new mongoose.Schema({
       type:String,
       required:[true, 'Please provide an album name.']
     },
-    image:[
-        {
+    image:{
             description:{
                 type:String,
                 required:[true, "Please provide an image name"]
             },
-            url:{
-                type:String,
-                required:[true, "Please provide an image"]
+            img:{
+                data:Buffer,
+                contentType:String
             }
-        }
-    ],
+        },
     user:{
         type:mongoose.Schema.ObjectId,
         ref:"user",

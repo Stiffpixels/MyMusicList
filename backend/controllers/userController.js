@@ -166,6 +166,7 @@ const logoutUser = async (req,res)=>{
  }
 
  const updateUserDetails = async (req, res)=>{
+   console.log(req.body)
     if(req.body.name){
         req.user.name = req.body.name
     }

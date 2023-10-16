@@ -7,7 +7,7 @@ const Profmenu =()=>{
         <p className="list-item">
         <NavLink to="/dashboard/general" >General</NavLink>
         </p>
-        <p className="list-item">
+        <div className="list-item">
           <Link className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             My List
           </Link>
@@ -15,7 +15,7 @@ const Profmenu =()=>{
             <li><NavLink to='/dashboard/current-list' className="dropdown-item"  >Current</NavLink></li>
             <li><NavLink className="dropdown-item" to="/dashboard/completed-List">Completed</NavLink></li>
           </ul>
-        </p>
+        </div>
       </div>
     </div>
     )

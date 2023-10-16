@@ -143,6 +143,15 @@ const updatemusic = async (req, res)=>{
     
 
     if(id){
+        if(req.file){
+          await Music.updateOne({_id:id}, {
+            img:{
+            data:fs.readFileSync(req.file.path),
+            contentType:'image/jpg'
+          }
+          })
+          fs.unlink(req.file.path, (err)=>{ if(err) console.log(err)})
+        }
          status = await music.findOneAndUpdate({_id:req.query.id}, newValues, { new:true })
     }
     if(field){
@@ -153,11 +162,8 @@ const updatemusic = async (req, res)=>{
             throw new ErrorHandler("No music found with that field value", 404)
         }
 
-        if(newValues.image){
-            console.log('image')
-        }else{
+        
             status = await music.updateMany( fieldQuery, {$set:newValues},{ multi:true })
-        }
          
     }
     
