@@ -278,7 +278,9 @@ img{
 }
 
 .profile-image{
-  width:17%;
+  width: 12%;
+  max-height:90px;
+  object-fit: cover;
   border-radius:50%;
   overflow: hidden;
 }

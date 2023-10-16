@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import Layout from '../components/layout/layout'
 import 'react-slideshow-image/dist/styles.css';
 import axios from 'axios';
-import toast from 'react-hot-toast';
 
 //import ImageSlider from '../layout/ImageSlider.js'
 

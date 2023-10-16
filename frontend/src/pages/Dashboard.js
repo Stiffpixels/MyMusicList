@@ -4,12 +4,14 @@ import axios from 'axios'
 import Profmenu from "../components/Profmenu"
 import toast from 'react-hot-toast'
 import { useAuth } from '../context/auth.js'
+import { useNavigate } from 'react-router-dom'
 
 const Dashboard = ()=>{
   const [ auth, setAuth ] = useAuth()
+  const navigate = useNavigate()
   const [user, setUser] = useState({})
-  const [name, setName] = useState(user.name)
-  const [email, setEmail] = useState(user.email)
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
   const [image, setImage] = useState({ preview: '', data: '' })
   
   const binToBase64 = (buffer)=>{
@@ -27,12 +29,14 @@ const Dashboard = ()=>{
       return
     }
     let formData = new FormData()
+    formData.append(name, name)
+    formData.append(email, email)
     formData.append("profile_pic", image)
     formData.append('profile_pic', image.data)
     try{
       const response = await axios.put(`${process.env.REACT_APP_API}/api/v1/update/details`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
     if (response){
-      toast.success("response received")
+      navigate("/dashboard")
     }
     }catch(error){
       console.log(error)
@@ -58,6 +62,8 @@ const Dashboard = ()=>{
         console.log(error)
         setAuth(false)
         localStorage.removeItem('auth')
+        navigate("/login")
+        
      }
     }
     asyncFunc()
@@ -69,7 +75,11 @@ const Dashboard = ()=>{
     <Profmenu />
     <div className="form-container" style={{width:"100%", margin:'0'}}>
     <section className='form profile-container' >
-    <div className="profile-image"><img src={`data:image/jpg;base64,${binToBase64(user?.avatar?.img?.data?.data)}`} alt="female profile picture" /></div>
+    <div className="profile-image">
+      <img src={`data:image/jpg;base64,${binToBase64(user?.avatar?.img?.data?.data)}`} alt="female profile picture" />
+    
+    </div>
+
     
     <div className="profile-details">
       <p className='profile-text' >{user.name}</p>
