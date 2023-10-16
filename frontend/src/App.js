@@ -1,5 +1,6 @@
 import './App.css';
 //import Layout from './components/layout/layout.js'
+import axios from 'axios'
 import {Routes, Route} from 'react-router-dom'
 import HomePage from './pages/home'
 import About from './pages/about'
@@ -16,6 +17,7 @@ import Currentlist from "./pages/Currentlist.js"
 import Completedlist from "./pages/Completedlist.js"
 
 function App() {
+  axios.defaults.withCredentials = true
   return <>
   <Routes>
     <Route path='/' element={<HomePage />} />

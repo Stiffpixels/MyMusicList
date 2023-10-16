@@ -1,8 +1,9 @@
 const express = require('express')
 const multer = require('multer')
+const path = require('path')
 const storage = multer.diskStorage({
   destination: function(req,file,cb){
-    cb(null, 'uploads')
+    cb(null, path.join(__dirname, '/uploads/'))
   },
   filename:function (req, file, cb){
     cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname) )
@@ -26,7 +27,7 @@ router.route('/password/reset').post(forgotPassword)
 router.route('/password/reset/:token').put(resetPassword)
 
 router.route('/update/password').post(isAuthorizedUser, updateUserPassword)
-router.route('/update/details').put(isAuthorizedUser,upload.single("cool_image"), updateUserDetails)
+router.route('/update/details').put(isAuthorizedUser,upload.single("profile_pic"), updateUserDetails)
 router.route('/admin/user/:id').put(isAuthorizedUser, authorizeRoles('admin'), updateUserRoles ).delete(isAuthorizedUser, authorizeRoles('admin'), deleteUser )
 
 router.route('/admin/users').get(isAuthorizedUser, authorizeRoles('admin'), getUsers)

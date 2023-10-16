@@ -3,22 +3,41 @@ import Layout from '../components/layout/layout.js'
 import axios from 'axios'
 import Profmenu from "../components/Profmenu"
 import toast from 'react-hot-toast'
+import { useAuth } from '../context/auth.js'
 
 const Dashboard = ()=>{
+  const [ auth, setAuth ] = useAuth()
   const [user, setUser] = useState({})
   const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
   const [image, setImage] = useState({ preview: '', data: '' })
   
+  const binToBase64 = (buffer)=>{
+    let binary = ''
+    const bytes = [].slice.call(new Uint8Array(buffer))
+    bytes.forEach((b)=> binary += String.fromCharCode(b))
+    return window.btoa(binary)
+  }
+  
   const handleSubmit = async (e)=>{
     e.preventDefault()
     toast.success(`Name: ${name} Email: ${email}`)
+    if(image.data.size>1*1000*1024){
+      toast.error('Image size cannot be more than 1MB')
+      return
+    }
     let formData = new FormData()
-    formData.append("image", image)
-
-    formData.append('file', image.data)
-    const response = await axios.post(`${process.env.REACT_APP_API}/api/v1/update/details`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
-    if (response) toast.success("response received")
+    formData.append("profile_pic", image)
+    formData.append('profile_pic', image.data)
+    try{
+      const response = await axios.put(`${process.env.REACT_APP_API}/api/v1/update/details`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
+    if (response){
+      toast.success("response received")
+    }
+    }catch(error){
+      console.log(error)
+      toast.error(error.response.data.message)
+    }
 
   }
   const handleFileChange = (e)=>{
@@ -31,13 +50,15 @@ const Dashboard = ()=>{
   useEffect(()=>{
     const asyncFunc = async ()=>{
       try{
-        const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`, { withCredentials:true})
+        const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`)
         if(res.data.success){
           setUser(res.data.user)
         }
       }catch(error){
         console.log(error)
-    }
+        setAuth(false)
+        localStorage.removeItem('auth')
+     }
     }
     asyncFunc()
   }, [])
@@ -48,7 +69,7 @@ const Dashboard = ()=>{
     <Profmenu />
     <div className="form-container" style={{width:"100%", margin:'0'}}>
     <section className='form profile-container' >
-    <div className="profile-image"><img src={require('./images/profilePic.jpg')} alt="female profile picture" /></div>
+    <div className="profile-image"><img src={`data:image/jpg;base64,${binToBase64(user?.avatar?.img?.data?.data)}`} alt="female profile picture" /></div>
     
     <div className="profile-details">
       <p className='profile-text' >{user.name}</p>
@@ -69,7 +90,7 @@ const Dashboard = ()=>{
       <input className='field-input' type="email" value={email} name='email' id='email' onChange={e=>setEmail(e.target.value)}  />
     </p>
     <p>
-      <input type='file' name='file' onChange={e=>handleFileChange(e)}></input>
+      <input type='file' name='profile_pic' onChange={e=>handleFileChange(e)}></input>
     </p>
 
     <div className='submit-btn-container'>

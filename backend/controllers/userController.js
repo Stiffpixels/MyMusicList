@@ -4,6 +4,7 @@ const User = require('../models/userModel')
 const sendToken = require('../utils/jwtToken')
 const sendEMail= require('../utils/sendEmail.js')
 const crypto = require('crypto')
+const fs = require('fs')
 
 
 const registerUser = async (req,res)=>{
@@ -116,8 +117,7 @@ const logoutUser = async (req,res)=>{
  }
 
  const getUserDetails = async (req,res)=>{
-    const user = await User.findOne({_id:req.user.id})
-
+    const user = await User.findOne({_id:req.user._id})
     res.status(200).json({
         success:true,
         user
@@ -172,9 +172,14 @@ const logoutUser = async (req,res)=>{
     if(req.body.email){
         req.user.email = req.body.email
     }
-    console.log(req.file)
     if(req.file){
-        console.log(req.file)
+        req.user.avatar.img = {
+          data: fs.readFileSync(req.file.path),
+          contentType:"image/png"
+        }
+        fs.unlink(req.file.path, (err)=>{
+          if (err) console.log(err)
+        })
     }
     await req.user.save()
 

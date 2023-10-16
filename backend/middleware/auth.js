@@ -11,6 +11,9 @@ const isAuthorizedUser = async (req, res, next)=>{
 
     const decodedData = jwt.verify(token, process.env.JWT_SECRET)
     req.user = await userModel.findById(decodedData.id)
+    if(!req.user){
+      throw new ErrorHandler('Please login or register first', 500)
+    }
     next()
 }
 
