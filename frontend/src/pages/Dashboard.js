@@ -5,6 +5,7 @@ import Profmenu from "../components/Profmenu"
 import toast from 'react-hot-toast'
 import { useAuth } from '../context/auth.js'
 import { useNavigate } from 'react-router-dom'
+import AdminProfile from '../components/AdminProfile.js'
 
 const Dashboard = ()=>{
   const [ auth, setAuth ] = useAuth()
@@ -88,9 +89,9 @@ const Dashboard = ()=>{
 
     </section>
     </div>
-    <div className="form-container" style={{width:'100%', margin:'0', marginBottom:'3em'}}>
+    <div className="form-container" style={{width:'100%', margin:'0', marginBottom:'1em'}}>
     <form className='form' onSubmit={e=>handleSubmit(e)}>
-    <h3 style={{textTransform:"uppercase"}}>Edit Profile</h3>
+    <h3 className="form-title" style={{textTransform:"uppercase"}}>Edit Profile</h3>
     <p className="form-field">
       <label htmlFor="name" className="field-text profile-field-text"  >Name: </label>
       <input className='field-input' value={name} type="name" name='name' id='name' onChange={e=>setName(e.target.value)}  />
@@ -99,7 +100,7 @@ const Dashboard = ()=>{
       <label htmlFor="email" className="field-text profile-field-text">Email: </label>
       <input className='field-input' type="email" value={email} name='email' id='email' onChange={e=>setEmail(e.target.value)}  />
     </p>
-    <p>
+    <p className="form-field file-input">
       <input type='file' name='profile_pic' onChange={e=>handleFileChange(e)}></input>
     </p>
 
@@ -108,6 +109,7 @@ const Dashboard = ()=>{
     </div>
     </form>
     </div>
+    {user.role==="admin" && <AdminProfile />}
     
   </Layout>
 </>
