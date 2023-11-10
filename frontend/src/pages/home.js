@@ -6,16 +6,23 @@ import axios from 'axios';
 //import ImageSlider from '../layout/ImageSlider.js'
 
 const Home = () => {
-  const [ data, setData ] = useState([])
+  const [ music, setMusic ] = useState([])
   const fetchData =async ()=>{
   try {
       const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/music`)
       if(res.data.success){
-        setData(res.data.Music)
+        setMusic(res.data.Music)
+        
       }
   } catch (error) {
       console.log(error);
   }
+  }
+  const binToBase64 = (buffer)=>{
+    let binary = ''
+    const bytes = [].slice.call(new Uint8Array(buffer))
+    bytes.forEach((b)=> binary += String.fromCharCode(b))
+    return window.btoa(binary)
   }
   
   useEffect(()=>{
@@ -26,15 +33,31 @@ const Home = () => {
 
   return (
     <Layout title="Best Place to Keep your Music Organized" keywords="Music, Music List, Indian Website" description="home page of My Music List" author="Muzammil">
-      <div className='form-container'>
-        <div className="form">
+      
+        <div className='music-grid'>
           
           {
-            JSON.stringify(data)==="{}"?( <p>{data[0].name}</p>):( <p>no music found</p>)
+            music.length===0?(<p>no music found</p> ):(
+
+              
+                music.map((album, index)=>{
+                  return <>
+                    <div className="music-container" key={index}>
+                      <div className="album-cover">
+                        <img src={`data:image/jpg;base64,${binToBase64(album?.image?.data?.data)}`} alt="music cover" />
+                      </div>
+                      <div className="details">
+                        <div className="music-name">{album.name}</div>
+                      </div>
+                    </div>
+                  </>
+                })
+              
+                
+            )
           }
           
         </div>
-      </div>
       
     </Layout>
   )

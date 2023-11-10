@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import AdminProfile from '../components/AdminProfile.js'
 
 const Dashboard = ()=>{
+  const [ profileChanged, setProfileChanged ] = useState(false)
   const [ auth, setAuth ] = useAuth()
   const navigate = useNavigate()
   const [user, setUser] = useState({})
@@ -36,8 +37,10 @@ const Dashboard = ()=>{
     formData.append('profile_pic', image.data)
     try{
       const response = await axios.put(`${process.env.REACT_APP_API}/api/v1/update/details`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
-    if (response){
-      navigate("/dashboard")
+    if (response?.data?.success){
+      setProfileChanged((prevVal)=>{
+        return prevVal?(false):(true)
+      })
     }
     }catch(error){
       console.log(error)
@@ -68,7 +71,7 @@ const Dashboard = ()=>{
      }
     }
     asyncFunc()
-  }, [])
+  }, [profileChanged])
   
 
   return <>
@@ -78,7 +81,7 @@ const Dashboard = ()=>{
     <section className='form profile-container' >
     
     <div className="profile-image">
-      <img src={`data:image/jpg;base64,${binToBase64(user?.avatar?.img?.data?.data)}`} alt="female profile picture" />
+      <img src={`data:image/jpg;base64,${binToBase64(user?.avatar?.img?.data?.data)}`} alt=" profile" />
     </div>
 
     

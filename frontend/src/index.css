@@ -174,7 +174,6 @@ img{
 
 
 /* form */
-
 .form-container{
   width: 75% !important;
   margin: 2.5em auto !important;
@@ -216,7 +215,7 @@ img{
 }
 
 .form > p{
-  width: 35%;
+  width: 45%;
 }
 
 /*.form *{
@@ -254,7 +253,6 @@ img{
 .form-title{
   width: 100%;
   text-align: center;
-  padding-bottom: 1.5em;
   text-transform:uppercase;
   margin-bottom :1em;
   font-family: 'Roboto Condensed', sans-serif;
@@ -262,7 +260,6 @@ img{
   font-weight: bold;
   font-size: 2rem;
   letter-spacing: 1px;
-  border-bottom: .5px solid gray;
 }
 
 
@@ -287,6 +284,7 @@ img{
   margin-top:1.5em;
   font-size: .75rem;
 }
+
 
 /*Dashboard*/
 
@@ -319,6 +317,32 @@ img{
 
 .file-input:file-selector-button {
   border: none;
+}
+
+/*Home page*/
+
+.music-grid{
+  margin-top: 2.5em;
+  display: grid;
+  grid-auto-flow: column;
+  gap: .5em;
+}
+
+.music-container{
+  background-color: rgb(236, 236, 236);
+  padding: 1em;
+  border-radius: 5px;
+}
+
+/*Songs List*/
+
+.song{
+  padding: .3em;
+  margin-bottom: 1em;
+}
+
+.song:last-child{
+  margin-bottom:0;
 }
 
 

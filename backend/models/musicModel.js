@@ -13,19 +13,21 @@ const musicSch = new mongoose.Schema({
         type:String,
         required:[true, 'Please provide a description']
     },
-    album:{
-      type:String,
-      required:[true, 'Please provide an album name.']
-    },
-    image:{
-            description:{
-                type:String,
-                required:[true, "Please provide an image name"]
-            },
-            img:{
-                data:Buffer,
-                contentType:String
+    songs:[
+            {
+                songName:{
+                    type:String,
+                    required:[true, "Provide a name for the song"],
+                    
+                },
+                credits:{
+                    type:String
+                }
             }
+    ],
+    image:{
+            data:Buffer,
+            contentType:String
         },
     user:{
         type:mongoose.Schema.ObjectId,

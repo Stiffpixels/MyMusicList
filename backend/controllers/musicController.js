@@ -1,6 +1,7 @@
+const { log } = require('console');
 const music = require('../models/musicModel')
 const ErrorHandler = require('../utils/errorHandler')
-
+const fs = require('fs')
 
 const getmusic = async (req, res, next)=>{
     const { name, fields, category, numFilters, page, limit } = req.query;
@@ -93,16 +94,33 @@ const getTrendingMusic = async (req, res)=>{
 const addmusic = async (req, res)=>{
 
     req.body.user = req.user._id
-    
-    const music = await music.create(req.body)
 
-    if(!music){
-        throw new ErrorHandler("Music Could not be created check the fields.", 404)
+    const musicdata = {...req.body}
+    delete musicdata.user
+    delete musicdata.cover_art
+    const songs = JSON.parse(musicdata.songs)
+    delete musicdata.songs
+    
+    const songsList = []
+
+    Object.entries(songs).forEach(([key])=>{
+        songsList.push(songs[key])
+    })
+
+    if(req.file){
+        musicdata.image = {
+            data: fs.readFileSync(req.file.path),
+            contentType:"image/jpg"
+        }
+        fs.unlink(req.file.path, (err)=>{
+            if (err) console.log(err)
+        })
     }
+    const Music = await music.create({ ...musicdata, songs:[...songsList] })
 
     res.status(200).json({
         success:true,
-        music
+        //Music
     })
 }
 

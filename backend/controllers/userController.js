@@ -1,5 +1,4 @@
 const ErrorHandler = require('../utils/errorHandler')
-const path = require("path")
 const User = require('../models/userModel')
 const sendToken = require('../utils/jwtToken')
 const sendEMail= require('../utils/sendEmail.js')

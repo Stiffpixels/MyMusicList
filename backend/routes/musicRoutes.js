@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const {isAuthorizedUser, authorizeRoles} = require("../middleware/auth")
 const path = require('path')
+
 const multer = require('multer')
 const storage = multer.diskStorage({
   destination: function(req,file,cb){
@@ -22,9 +23,9 @@ router.route("/musicDetail").get(getmusicDetail)
 router.route("/music/review").post(isAuthorizedUser, createUpdateReview)
 router.route("/music/trending").get(getTrendingMusic)
 
-router.route("/admin/music/new").post(isAuthorizedUser,authorizeRoles('admin'),addmusic)
+router.route("/admin/music/new").post(isAuthorizedUser,authorizeRoles('admin'), upload.single('cover_art'), addmusic)
 
-router.route("/admin/music/update").put(isAuthorizedUser,authorizeRoles('admin'),upload.single('cover_art'), updatemusic)
+router.route("/admin/music/update").put(isAuthorizedUser,authorizeRoles('admin'), updatemusic)
 router.route("/admin/music/delete").delete(isAuthorizedUser, authorizeRoles('admin'), deletemusic)
 
 module.exports = router

@@ -4,7 +4,6 @@ const ErrorHandler = require('../utils/errorHandler')
 
 const isAuthorizedUser = async (req, res, next)=>{
     const { token } = req.cookies
-
     if(!token){
         throw new ErrorHandler('Please login or register first', 500)
     }
