@@ -15,6 +15,7 @@ import Resetpassword from './pages/Resetpassword.js'
 import Privateroute from './components/Private routes/Privateroute.js'
 import Currentlist from "./pages/Currentlist.js"
 import Completedlist from "./pages/Completedlist.js"
+import Plannedlist from "./pages/Plannedlist.js"
 
 function App() {
   axios.defaults.withCredentials = true
@@ -26,10 +27,11 @@ function App() {
     <Route path='*' element={<PageNotFound />} />
     <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
     <Route path="/dashboard" element={<Privateroute />} >
-      <Route path='' element={<Dashboard/>} />
-      <Route path='general' element={<Dashboard/>} />
-      <Route path='current-list' element={<Currentlist/>} />
-      <Route path='completed-list' element={<Completedlist/>} />
+      <Route path='' element={<Dashboard />} />
+      <Route path='general' element={<Dashboard />} />
+      <Route path='current-list' element={<Currentlist />} />
+      <Route path='completed-list' element={<Completedlist />} />
+      <Route path='planned-list' element={<Plannedlist />} />
     </Route>
     
     <Route path='/register' element={<Register />} />

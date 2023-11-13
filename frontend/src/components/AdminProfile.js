@@ -82,7 +82,7 @@ const AdminProfile = ()=>{
                 <input className='field-input' type="text" name="name" id="name" value={music.name} onChange={(e)=>setMusic({...music, name:e.target.value})} />
             </p>
             
-            <div className="form-field">
+            <div className="form-field" style={{width:'60%'}}>
                 <label className="field-text " style={{color:"black", marginBottom:".5em"}} htmlFor="songs">Songs: </label>
                 <ol className="songlist" ref={songsRef}>
                     <li className="song">

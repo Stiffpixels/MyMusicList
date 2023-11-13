@@ -4,6 +4,7 @@ const sendToken = require('../utils/jwtToken')
 const sendEMail= require('../utils/sendEmail.js')
 const crypto = require('crypto')
 const fs = require('fs')
+const music = require('../models/musicModel')
 
 
 const registerUser = async (req,res)=>{
@@ -186,6 +187,28 @@ const logoutUser = async (req,res)=>{
     sendToken(req.user, 200, res)
  }
 
+ const addToList = async (req,res)=>{
+    const {albumId, listName} = req.body
+    const user = req.user
+
+    user.musicList[listName].push(await music.findById(albumId))
+    user.save()
+    res.status(200).json({
+        success:true
+    })
+ }
+
+ const getUserList = async (req, res)=>{
+    const { list } = req.query
+
+    const List = await music.find({ "_id": {"$in":req.user.musicList[list]}})
+    
+    res.status(200).json({
+        success:true,
+        List
+    })
+ }
+
  const updateUserRoles = async (req, res)=>{
     const { name, email, role } = req.body
     const user = await User.findOne({_id:req.params.id})
@@ -226,4 +249,4 @@ const logoutUser = async (req,res)=>{
     })
  }
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser }
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList }

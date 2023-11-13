@@ -1,15 +1,18 @@
 import {useState, useEffect, useContext, createContext} from 'react'
+import axios from 'axios'
+
 
 const AuthContext = createContext()
 
 const AuthProvider = ({children})=>{
     const [auth,setAuth] = useState({})
+
     const isAuthNull = auth.user===false
     useEffect(()=>{
       const parsedData = "true" === localStorage.getItem('auth')
       if(parsedData){
         setAuth({
-          user:parsedData
+          user:parsedData,
         })
       }else{
         setAuth({...auth, user:false })

@@ -34,6 +34,11 @@ const userSchema = new mongoose.Schema({
             contentType:String
         }
     },
+    musicList:{
+        completed:[mongoose.ObjectId],
+        current:[mongoose.ObjectId],
+        planning:[mongoose.ObjectId]
+    },
     role:{
         type:String,
         default:'user'

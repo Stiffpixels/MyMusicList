@@ -14,6 +14,7 @@ const Profmenu =()=>{
           <ul className="dropdown-menu list-unstyled">
             <li><NavLink to='/dashboard/current-list' className="dropdown-item"  >Current</NavLink></li>
             <li><NavLink className="dropdown-item" to="/dashboard/completed-List">Completed</NavLink></li>
+            <li><NavLink className="dropdown-item" to="/dashboard/planned-List">Planning</NavLink></li>
           </ul>
         </div>
       </div>

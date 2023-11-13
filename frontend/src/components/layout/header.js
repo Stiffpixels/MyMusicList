@@ -27,7 +27,7 @@ const Header = () => {
   
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
+  <nav className="navbar navbar-expand-lg bg-body-tertiary">
   <div className="container-fluid">
   <Link to='/' className="navbar-brand"><FaMusic/><span className="navbar-brand-title">&nbsp;MyMusicList</span></Link>
     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
