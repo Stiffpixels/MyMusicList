@@ -25,7 +25,7 @@ const Completedlist = () => {
   return (
     <Layout title="Completed">
       <Profmenu />
-      <MusicList albums={albums}/>
+      <MusicList albums={albums} list="completed"/>
     </Layout>
   )
 }

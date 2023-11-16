@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { FaStar } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import UpdateModal from './UpdateModal'
 
-const MusicList = ({albums}) => {
+const MusicList = ({albums, list}) => {
+  const [openModal, setOpenModal] = useState(false)
+  const [albumId, setAlbumId] = useState('')
     const binToBase64 = (buffer)=>{
         let binary = ''
         const bytes = [].slice.call(new Uint8Array(buffer))
@@ -19,7 +24,17 @@ const MusicList = ({albums}) => {
                       </div>
                       <div className="music-details">
                         <p className="music-name">{album.name}</p>
-                        <p className="artist profile-field-text" style={{fontSize:'.7em'}}>{album.artist}</p>
+                        <div className="artist-and-rating">
+                          <p className="artist profile-field-text" style={{fontSize:'1em'}}>{album.artist}</p>
+                          <p className="rating"><FaStar color='#fcb603' style={{marginTop:"-.35em"}}/>{album.rating}</p>
+                        </div>
+                      </div>
+                      <div className="music-buttons" style={{display:'flex', alignItems:'center'}}>
+                        <Link className='view-more' to={`../../${album._id}`}>View More</Link>
+                        <button type="button" style={{ border:'0'}} onClick={()=>{
+                          setAlbumId(album._id)
+                          setOpenModal(true)
+                          }}>Edit</button>
                       </div>
                     </div>
                   </>
@@ -28,6 +43,7 @@ const MusicList = ({albums}) => {
                 
             )
           }
+    < UpdateModal open={openModal} onClose={()=>setOpenModal(false)} albumId={albumId} listName={list} />
     </div>
   )
 }

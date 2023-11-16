@@ -1,29 +1,26 @@
 import React, { useState } from 'react'
 import ReactDom from 'react-dom'
 import axios from 'axios'
-import toast from 'react-hot-toast'
 import { FaStar } from 'react-icons/fa'
+import toast from 'react-hot-toast'
 
 
 
-const Modal = ({open, onClose, albumId}) => {
+const UpdateModal = ({open, onClose, albumId, listName}) => {
   const [rating, setRating] = useState(null)
   const [hover, setHover] = useState(null)
+  const [comment, setComment] = useState('')
   if(open===false) return null
 
-  const addToList = async (e)=>{
+  const UpdateList = async (e)=>{
     e.preventDefault()
-    const listName = e.target.textContent.toLowerCase()
-    
     try {
-        const resp = await axios.put(`${process.env.REACT_APP_API}/api/v1/add/list`, {albumId, listName, rating})
-        if(resp.data.success===true){
-            onClose()
-            toast.success("Album added to the list")
+        const resp = await axios.get(`${process.env.REACT_APP_API}/api/v1/update/list?albumId=${albumId}&listName=${listName}&comment=${comment}&rating=${rating}`)
+        if(resp.data.success){
+            toast.success('Album has been updated')
         }
     } catch (error) {
-        console.log(error)
-        toast.error(error?.response?.data?.message)
+        console.log(error);
     }
   }
 
@@ -33,18 +30,20 @@ const Modal = ({open, onClose, albumId}) => {
         <div className="Modal-overlay">
             <div className="music-container Modal" >
                 <div className="close-btn" style={{ display:"flex", alignItems:'center', justifyContent:'space-between'}}>
-                    Provide rating and location
+                    Update Album
                     <button type="button" style={btnStyles} onClick={onClose}>⛌</button>
                 </div>
-                <form className="form" style={{display:'flex', flexDirection:'row', padding:'0', marginBottom:'1em'}}>
+                <form className="form" onSubmit={e=>UpdateList(e)} style={{display:'flex', flexDirection:'column', padding:'0', marginBottom:'1em'}}>
+                    <div className="rating">
                     {
                         [...Array(5)].map((star, index)=>{
                             const currentRating = index + 1
                             return(
-                                <label >
+                                <label key={index}>
                                     <input
                                     type="radio"
                                     name="rating"
+                                    aria-selected={index===0?"true" : "false"}
                                     value={currentRating}
                                     onClick={() => setRating(currentRating)} />
                                     <FaStar 
@@ -58,22 +57,18 @@ const Modal = ({open, onClose, albumId}) => {
                             )
                         })
                     }
+                    </div>
+                        <textarea style={{width:'100%', marginTop:'1em', minHeight:'13vh'}} name="review-comment" id="review-comment" className="music-description-boxx" value={comment} onChange={(e)=>setComment(e.target.value)}></textarea>
+                        <div className='submit-btn-container'>
+                        <button type="submit" className='submit-btn'  >Update</button>
+                        </div>
+                        
                 </form>
-                <div className="list-options">
-                    <div className="current">
-                        <button type="button" className="Modal-btn" style={btnStyles} onClick={e=>addToList(e)}>Current</button>
-                    </div>
-                    <div className="completed">
-                        <button type="button" className="Modal-btn" style={btnStyles} onClick={e=>addToList(e)}>Completed</button>
-                    </div>
-                    <div className="planning">
-                        <button type="button" className="Modal-btn" style={btnStyles} onClick={e=>addToList(e)}>Planning</button>
-                    </div>
-                </div>
+
             </div>
         </div>
     </>,
   document.getElementById('portal'))
 }
 
-export default Modal
+export default UpdateModal

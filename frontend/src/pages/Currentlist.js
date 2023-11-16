@@ -25,7 +25,7 @@ const Currentlist = ()=>{
   return(
     <Layout title="Current">
       <Profmenu />
-      <MusicList albums={albums}/>
+      <MusicList albums={albums} list="current"/>
     </Layout>
     )
 }

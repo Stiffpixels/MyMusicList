@@ -16,12 +16,14 @@ import Privateroute from './components/Private routes/Privateroute.js'
 import Currentlist from "./pages/Currentlist.js"
 import Completedlist from "./pages/Completedlist.js"
 import Plannedlist from "./pages/Plannedlist.js"
+import Album from './pages/Album.js';
 
 function App() {
   axios.defaults.withCredentials = true
   return <>
   <Routes>
     <Route path='/' element={<HomePage />} />
+    <Route path='/:albumId' element={ <Album />} />
     <Route path='/about' element={<About />} />
     <Route path='/contact' element={<Contact />} />
     <Route path='*' element={<PageNotFound />} />

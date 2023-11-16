@@ -25,7 +25,7 @@ const Plannedlist = () => {
   return (
     <Layout title="Planned">
       <Profmenu />
-      <MusicList albums={albums}/>
+      <MusicList albums={albums} list="planning"/>
     </Layout>
   )
 }

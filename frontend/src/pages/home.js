@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react'
 import Layout from '../components/layout/layout'
 import 'react-slideshow-image/dist/styles.css';
 import axios from 'axios';
-import { FaPlus } from 'react-icons/fa'
+import { FaPlus, FaStar } from 'react-icons/fa'
 import Modal from '../components/Modal';
+import { Link } from 'react-router-dom';
 //import ImageSlider from '../layout/ImageSlider.js'
 
 const Home = () => {
@@ -62,10 +63,14 @@ const Home = () => {
                       </div>
                       <div className="music-details">
                         <p className="music-name">{album.name}</p>
-                        <p className="artist profile-field-text" style={{fontSize:'.7em'}}>{album.artist}</p>
+                        <div className="artist-and-rating">
+                          <p className="artist profile-field-text" style={{fontSize:'1em'}}>{album.artist}</p>
+                          <p className="rating"><FaStar color='#fcb603' style={{marginTop:"-.35em"}}/>{album.rating}</p>
+                        </div>
+                        
                       </div>
                       <div className="music-buttons">
-                        <button type="button" className='view-more'>View More</button>
+                        <Link type="button" className='view-more' to={`./${album._id}`}>View More</Link>
                         {
                           !userList.includes(album._id) && <button type="button"  className='btn bg-success text-light' onClick={(e)=>{
                             e.preventDefault()

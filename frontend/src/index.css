@@ -370,6 +370,21 @@ img{
   color: black;
 }
 
+.artist-and-rating{
+  font-size: .7em;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom:.5em;
+}
+
+/*Album*/
+
+.album-container{
+  width: 87%;
+  margin: 0 auto;
+  color: black;
+}
+
 /*Modal*/
 
 .Modal-overlay{
@@ -385,7 +400,7 @@ img{
 }
 
 .Modal{
-  min-width: 40%;
+  min-width: 60%;
   position:fixed;
   top:50%;
   left: 50%;
@@ -402,6 +417,14 @@ img{
   text-align:left;
   margin-bottom:.5em;
   border-radius: 5px;
+}
+
+input[name=rating]{
+  display:none;
+}
+
+.star{
+  cursor: pointer;
 }
 
 .Modal-btn:hover{

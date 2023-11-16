@@ -188,14 +188,78 @@ const logoutUser = async (req,res)=>{
  }
 
  const addToList = async (req,res)=>{
-    const {albumId, listName} = req.body
+    const {albumId, listName, rating} = req.body
     const user = req.user
+    let Rating = 0
+    const album = await music.findById(albumId)
+    if(user.musicList[listName].includes(album)){
+        throw new ErrorHandler("This album is already in your list", 500)
+    }
 
-    user.musicList[listName].push(await music.findById(albumId))
+    if(rating){
+        Rating = rating
+    }
+
+    album.numOfReviews += 1
+    album.reviews.push({ user:user._id, rating:Rating, name:user.name})
+    
+
+
+    album.rating = (album.rating + rating) / album.numOfReviews
+
+
+    album.save()
+
+    user.musicList[listName].push(album)
     user.save()
     res.status(200).json({
         success:true
     })
+ }
+
+ const updateList  = async (req, res)=>{
+    const {albumId, listName, rating, comment} = req.query
+    const user = req.user
+    let prevReview = {}
+    const qString = {}
+
+    if(!user.musicList[listName].includes(albumId)){
+        throw new ErrorHandler("Album is not in your list", 404)
+    }
+
+    const album =await music.findById(albumId);
+    
+    album.reviews.map((review, index)=>{
+        if(review.user==user.id){
+            prevReview =  album.reviews[index]
+            album.reviews.splice(index)
+        }
+    })
+
+    qString.user = user.id
+    qString.name = user.name
+    
+    if(rating==='null'){
+        qString.rating = 0
+    }else{
+        qString.rating = rating
+    }
+    if(comment){
+        qString.comment = comment
+    }
+
+    album.reviews.push({...prevReview,...qString })
+    let albumRating = 0
+    album.reviews.map((review)=>{
+        albumRating += review.rating
+    })
+    album.rating = albumRating/album.numOfReviews
+
+    album.save()
+    res.status(200).json({
+        success:"true"
+    })
+
  }
 
  const getUserList = async (req, res)=>{
@@ -249,4 +313,4 @@ const logoutUser = async (req,res)=>{
     })
  }
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList }
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList, updateList }

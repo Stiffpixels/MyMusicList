@@ -72,7 +72,7 @@ const getmusicDetail = async (req, res)=>{
     if(!Music){
         throw new ErrorHandler("No music found with that id", 404)
     }
-    console.log(typeof Music.createdAt)
+    
     res.status(200).json({success:true,Music})
 }
 
