@@ -23,7 +23,7 @@ const Plannedlist = () => {
     getUserList()
   }, [])
   return (
-    <Layout title="Planned">
+    <Layout title="Planning">
       <Profmenu />
       <MusicList albums={albums} list="planning"/>
     </Layout>

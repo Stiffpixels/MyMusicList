@@ -13,9 +13,11 @@ const MusicList = ({albums, list}) => {
         return window.btoa(binary)
     }
   return (
-    <div className='music-grid'>
+    <>
           {
-            albums.length===0?(<p>no music found</p> ):(
+            albums.length===0?(<div className="form-container"><div className="form" style={{ padding:'1em 0', fontSize:'1rem', color:'black'}}> <label>No music has been added to this list</label> </div></div> ):(
+              <div className='music-grid'>
+                {
                 albums.map((album, index)=>{
                   return <>
                     <div className="music-container" key={index}>
@@ -30,21 +32,25 @@ const MusicList = ({albums, list}) => {
                         </div>
                       </div>
                       <div className="music-buttons" style={{display:'flex', alignItems:'center'}}>
-                        <Link className='view-more' to={`../../${album._id}`}>View More</Link>
+                        <Link className='view-more' to={`../../album/${album._id}`}>View More</Link>
                         <button type="button" style={{ border:'0'}} onClick={()=>{
                           setAlbumId(album._id)
                           setOpenModal(true)
                           }}>Edit</button>
                       </div>
                     </div>
+                  
                   </>
+                  
                 })
+                }
+                </div>
               
                 
             )
           }
     < UpdateModal open={openModal} onClose={()=>setOpenModal(false)} albumId={albumId} listName={list} />
-    </div>
+    </>
   )
 }
 

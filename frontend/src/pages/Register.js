@@ -30,10 +30,10 @@ const Register = () => {
     }
 
   return (
-    <Layout title="Register">
+    <Layout title="Sign Up">
         <div className="form-container">
             <form className="form" onSubmit={ handleSubmit }>
-                <h2 className='form-title'>Register</h2>
+                <h2 className='form-title'>Sign Up</h2>
                 <p className="form-field">
                     <label htmlFor="name" className="field-text">Name: </label>
                     <input className='field-input' type="text" name='name' id='name' value={name} onChange={(e)=>setName(e.target.value)} required/>

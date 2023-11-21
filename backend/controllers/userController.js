@@ -14,15 +14,39 @@ const registerUser = async (req,res)=>{
     if(existingUser){
         throw new ErrorHandler('This email is already in use.', 500)
     }
+    
 
     const user = await User.create({name, email,password, avatar:{
         public_id:'sample id',
         url:'userpfpicurl'
     }})
 
+    const VerificationToken = user.getResetPasswordToken(true)
+
+    user.verificationToken = VerificationToken
+
+    await user.save({ validateBeforeSave: false })
+    const verificationURL = `http://${process.env.FRONTEND_HOST}/verification/${VerificationToken}`
+    const message =`your account verification link :- \n\n ${verificationURL}  if you have not made account creation request on MyMusicList, please ignore it`
+    try{
+        sendEMail({
+            email:user.email,
+            subject:'MyMusicList email verification',
+            message
+        })
+        res.status(200).json({
+            success:true,
+            message:"A verification link has been sent to your email id."
+        })
+    }catch(err){
+        user.verificationToken = undefined
+        
+        await user.save({ validateBeforeSave:false })
+    }
+
     res.status(200).json({
-        success:true,
-        message:'Registration complete'
+        success:false,
+        message:'Some error occured'
     })
 }
 
@@ -34,8 +58,12 @@ const loginUser = async (req, res)=>{
     }
     const user = await User.findOne({email}).select("+password")
 
+
     if(!user){
-        throw new ErrorHandler('Invalid email or password')
+        throw new ErrorHandler('Invalid email or password', 400)
+    }
+    if(user.active===false){
+        throw new ErrorHandler("Please verify your email before logging in", 400)
     }
     const isPasswordMatched = await user.comparePassword(password)
 
@@ -47,8 +75,22 @@ const loginUser = async (req, res)=>{
 
 }
 
-const logoutUser = async (req,res)=>{
+const verifyUser = async (req, res)=>{
+    const { token } = req.params
+    
+    const user = await User.findOne({verificationToken:token})
+    if(!user){
+        throw new ErrorHandler("No user found for that verification link please try again", 404)
+    }
+    user.active = true
+    
+    await user.save()
+    res.status(200).json({
+        success:true
+    })
+}
 
+const logoutUser = async (req,res)=>{
     res.cookie('token', null, {expires: new Date(Date.now()), httpOnly:true})
 
     res.status(200).json({
@@ -64,12 +106,12 @@ const logoutUser = async (req,res)=>{
         throw new ErrorHandler("No user with that email", 404)
     }
 
-    const resetToken = user.getResetPasswordToken()
+    const resetToken = user.getResetPasswordToken(false)
 
     await user.save({ validateBeforeSave: false })
     const resetPasswordUrl = `http://${process.env.FRONTEND_HOST}/password/reset/${resetToken}`
 
-    const message =`your password reset link :- \n\n ${resetPasswordUrl} valid for 15 minutes if you have not made request to reset your password, please ignore it`
+    const message =`your password reset link :- \n\n ${resetPasswordUrl} valid for 15 minutes if you have not made request to reset your password, someone else is trying to reset your password so please ignore this email`
     try{
         sendEMail({
             email:user.email,
@@ -218,7 +260,7 @@ const logoutUser = async (req,res)=>{
  }
 
  const updateList  = async (req, res)=>{
-    const {albumId, listName, rating, comment} = req.query
+    const {albumId, listName, rating, comment, updatedList} = req.query
     const user = req.user
     let prevReview = {}
     const qString = {}
@@ -239,16 +281,19 @@ const logoutUser = async (req,res)=>{
     qString.user = user.id
     qString.name = user.name
     
-    if(rating==='null'){
-        qString.rating = 0
-    }else{
+    if(rating!=='null'){
         qString.rating = rating
     }
     if(comment){
         qString.comment = comment
     }
-
-    album.reviews.push({...prevReview,...qString })
+    if(updatedList){
+        console.log(updatedList)
+        user.musicList[listName].pop(albumId)
+        user.musicList[updatedList].push(albumId)
+        await user.save()
+    }
+    album.reviews.push({...prevReview._doc,...qString })
     let albumRating = 0
     album.reviews.map((review)=>{
         albumRating += review.rating
@@ -313,4 +358,4 @@ const logoutUser = async (req,res)=>{
     })
  }
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList, updateList }
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList, updateList, verifyUser }

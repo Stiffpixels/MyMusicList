@@ -6,6 +6,8 @@ const fs = require('fs')
 const getmusic = async (req, res, next)=>{
     const { name, fields, category, numFilters, page, limit } = req.query;
     const qParams = {}
+    const musicCount = await music.count()
+    const pageCount = Math.ceil(musicCount /10)
     const newLimit = Number(limit) || 10
     if(name){
         qParams.name = { $regex:name, $options:'i' }
@@ -63,7 +65,7 @@ const getmusic = async (req, res, next)=>{
         throw new ErrorHandler("No music found", 404)
     }
 
-    res.status(200).json({ success:true,Music })
+    res.status(200).json({ success:true,Music, pageCount })
 }
 
 const getmusicDetail = async (req, res)=>{

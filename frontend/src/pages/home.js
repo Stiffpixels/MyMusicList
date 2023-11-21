@@ -12,23 +12,32 @@ const Home = () => {
   const [isModalOpen, setModalOpen] = useState(false)
   const [AlbumId, setAlbumId] = useState('')
   const [userList, setUserList] = useState([])
+  const [page, setPage] = useState(1)
+  const [pageCount, setPageCount] = useState(0)
 
   const fetchData =async ()=>{
   try {
-      const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/music`)
-      const user = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`)
+      const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/music?page=${page}`)
       if(res.data.success){
         setMusic(res.data.Music)
+        setPageCount(res.data.pageCount)
       }
-      if(user.data.success){
-        const current = user.data.user.musicList.current
-        const completed = user.data.user.musicList.completed
-        const planned = user.data.user.musicList.planning
-
-        setUserList(current.concat(completed).concat(planned))
-      }
+      
   } catch (error) {
       console.log(error);
+      setMusic([])
+  }
+  try {
+    const user = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`)
+    if(user.data.success){
+      const current = user.data.user.musicList.current
+      const completed = user.data.user.musicList.completed
+      const planned = user.data.user.musicList.planning
+
+      setUserList(current.concat(completed).concat(planned))
+    }
+  } catch (error) {
+    console.log(error)
   }
   }
   const binToBase64 = (buffer)=>{
@@ -37,12 +46,25 @@ const Home = () => {
     bytes.forEach((b)=> binary += String.fromCharCode(b))
     return window.btoa(binary)
   }
-
+  
+  const getPageNumber = (e)=>{
+    e.preventDefault()
+    if(page < pageCount){
+      if(e.target.id === "page-btn-2"){
+        return page+1
+      }else{
+        return page+2
+      }
+    }else{
+      e.target.display = "none"
+    }
+    
+  }
   
   
   useEffect(()=>{
     fetchData()
-  }, [isModalOpen])
+  }, [isModalOpen, page])
   
 
 
@@ -70,13 +92,13 @@ const Home = () => {
                         
                       </div>
                       <div className="music-buttons">
-                        <Link type="button" className='view-more' to={`./${album._id}`}>View More</Link>
+                        <Link type="button" className='view-more' to={`./album/${album._id}`}>View More</Link>
                         {
-                          !userList.includes(album._id) && <button type="button"  className='btn bg-success text-light' onClick={(e)=>{
+                          !userList.includes(album._id)  && <button type="button"  className='btn bg-success text-light' onClick={(e)=>{
                             e.preventDefault()
                             setAlbumId(album._id)
                             setModalOpen(true)
-                          }} style={{padding:"0 .3em .17em .3em", fontSize:'.85rem'}}><FaPlus/></button>
+                          }} style={{padding:"0 .3em .17em .3em", fontSize:'.85rem'}}><FaPlus/></button> 
                         }
                         
                       </div>
@@ -89,10 +111,27 @@ const Home = () => {
             )
           }
          <Modal open={isModalOpen} onClose={()=>setModalOpen(false)} albumId={AlbumId}/>
-          
-        
+
         </div>
-      
+        <div className="page-numbers">
+          <p style={{marginBottom:'.3em', fontWeight:'bolder'}}>page</p>
+          <input type="button" className='page-btn' onClick={()=>{
+            if(page===1){
+              return
+            }
+            setPage(page-1)
+          }}  value="<<" />
+          <input type="button" onClick={(e)=>e.preventDefault()} className='page-btn' value={page} style={{background:'lightGray', padding:'0 .2em'}}/>
+          <input type="button" onClick={(e)=>setPage(Number(e.target.value))} className='page-btn' id='page-btn-2' value={e=>getPageNumber(e)} />
+          <input type="button" className='page-btn' onClick={(e)=>setPage(Number(e.target.value))} value={e=>getPageNumber(e)} />
+          <input type="button" className='page-btn'  onClick={(e)=>{
+           if(page <pageCount){
+            setPage(page+1)
+           }else{
+            return
+           }
+          }} value=">>" />
+        </div>
     </Layout>
   )
 }

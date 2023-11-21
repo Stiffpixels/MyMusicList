@@ -10,12 +10,13 @@ const UpdateModal = ({open, onClose, albumId, listName}) => {
   const [rating, setRating] = useState(null)
   const [hover, setHover] = useState(null)
   const [comment, setComment] = useState('')
+  const [updatedList, setUpdatedList] = useState(listName)
   if(open===false) return null
 
   const UpdateList = async (e)=>{
     e.preventDefault()
     try {
-        const resp = await axios.get(`${process.env.REACT_APP_API}/api/v1/update/list?albumId=${albumId}&listName=${listName}&comment=${comment}&rating=${rating}`)
+        const resp = await axios.get(`${process.env.REACT_APP_API}/api/v1/update/list?albumId=${albumId}&listName=${listName}&comment=${comment}&rating=${rating}&updatedList=${updatedList}`)
         if(resp.data.success){
             toast.success('Album has been updated')
         }
@@ -57,7 +58,13 @@ const UpdateModal = ({open, onClose, albumId, listName}) => {
                             )
                         })
                     }
+                    
                     </div>
+                    <select name="UpdatedList" id="UpdatedList" className='updated-list' onChange={(e)=>setUpdatedList(e.target.value)} value={updatedList} >
+                        <option value="current">Current</option>
+                        <option value="completed">Completed</option>
+                        <option value="planning">Planning</option>
+                    </select >
                         <textarea style={{width:'100%', marginTop:'1em', minHeight:'13vh'}} name="review-comment" id="review-comment" className="music-description-boxx" value={comment} onChange={(e)=>setComment(e.target.value)}></textarea>
                         <div className='submit-btn-container'>
                         <button type="submit" className='submit-btn'  >Update</button>

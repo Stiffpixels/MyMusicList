@@ -37,7 +37,7 @@ const Album = () => {
       <div className="album_cover">
       <img src={`data:image/jpg;base64,${binToBase64(album?.image?.data?.data)}`} alt=" profile" />
       </div>
-      <div >
+      <div className='album-details' >
         <div className="artist-and-rating" style={{marginTop:'.5em'}} >
           <h3 style={{fontFamily:'Roboto Condensed, sans-serif'}}>{album.name}</h3>
           <p style={{fontSize:"1rem", fontWeight:'bolder'}}><FaStar color='#fcb603'  size={20} style={{marginTop:'-.2em'}}/>{album.rating}</p>
@@ -63,7 +63,11 @@ const Album = () => {
           {
             album?.reviews?.map((review, index)=>{
               return <li key={index} style={{background:'white', padding:'.5em', borderRadius:'10px', marginTop:'.75em'}}>
-                <label style={{fontSize:'1.1rem'}}>{review.name}</label><br></br>
+                <div className="artist-and-rating">
+                  <label style={{fontSize:'1.1rem'}}>{review.name}</label>
+                  <p style={{fontSize:".7rem", fontWeight:'bolder'}}><FaStar color='#fcb603'  size={15} style={{marginTop:'-.2em'}}/>{review.rating}</p>
+                </div>
+                
                 <label style={{fontSize:'.75em'}}> {review.comment}</label>
               </li>
             })

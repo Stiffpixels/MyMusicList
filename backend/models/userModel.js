@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema({
         type:String,
         default:'user'
     },
+    active:{
+        type:Boolean,
+        default:false
+    },
+    verificationToken:String,
     resetPasswordToken:String,
     resetPasswordExpire:Date
 })
@@ -62,12 +67,15 @@ userSchema.methods.getJWTToken = function(){
 
 //password reset
 
-userSchema.methods.getResetPasswordToken = function(){
+
+
+userSchema.methods.getResetPasswordToken = function(verification){
     const resetToken = crypto.randomBytes(20).toString("hex")
-
-    this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
-
-    this.resetPasswordExpire = Date.now() + 15 * 60 * 1000
+    if(!verification){
+        this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex")
+        this.resetPasswordExpire = Date.now() + 15 * 60 * 1000
+    }
+    
 
     return resetToken
 }

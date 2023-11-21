@@ -17,13 +17,15 @@ import Currentlist from "./pages/Currentlist.js"
 import Completedlist from "./pages/Completedlist.js"
 import Plannedlist from "./pages/Plannedlist.js"
 import Album from './pages/Album.js';
+import VerifyUser from './components/VerifyUser.js';
+
 
 function App() {
   axios.defaults.withCredentials = true
   return <>
   <Routes>
     <Route path='/' element={<HomePage />} />
-    <Route path='/:albumId' element={ <Album />} />
+    <Route path='/album/:albumId' element={ <Album />} />
     <Route path='/about' element={<About />} />
     <Route path='/contact' element={<Contact />} />
     <Route path='*' element={<PageNotFound />} />
@@ -36,11 +38,12 @@ function App() {
       <Route path='planned-list' element={<Plannedlist />} />
     </Route>
     
+    <Route path='/verification/:token' element={<VerifyUser><Login /></VerifyUser>} />
     <Route path='/register' element={<Register />} />
     <Route path='/login' element={<Login />} />
     
     <Route path='/password/forgot' element={<Forgotpassword/>} />
-    <Route path='/password/reset/:token' element={<Resetpassword/>} />
+    <Route path='/password/reset/:token' element={<Resetpassword/>}/>
   </Routes>
 
   </>

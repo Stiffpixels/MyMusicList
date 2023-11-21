@@ -174,7 +174,7 @@ img{
 
 /* form */
 .form-container{
-  width: 75% !important;
+  width: 65% !important;
   margin: 2.5em auto !important;
   display: flex;
   justify-content: center;
@@ -295,16 +295,19 @@ img{
   align-items: center;
 }
 
-.profile-image{
-  width: 12%;
-  max-height:90px;
-  object-fit: cover;
+
+.profile-image > img{
   border-radius:50%;
-  overflow: hidden;
+  width: 10vw;
+  height: 10vw;
+  object-fit: cover;
 }
 
 .profile-details{
   width: 60%;
+  color: black;
+  
+  font-family: 'Roboto condensed', sans-serif;
   font-size: .8rem;
 }
 .profile-text{
@@ -377,6 +380,23 @@ img{
   margin-bottom:.5em;
 }
 
+.page-numbers{
+  position: fixed;
+  bottom: 10%;
+  left: 45%;
+  text-align: center;
+}
+
+.page-btn{
+  background:transparent;
+  border:0;
+  margin:0 .2em;
+  font-weight:bolder;
+}
+.page-btn:last-child{
+  margin: 0;
+}
+
 /*Album*/
 
 .album-container{
@@ -432,6 +452,17 @@ input[name=rating]{
   color: white;
 }
 
+.updated-list{
+  display:block;
+  width: 100%;
+  margin-top:1em;
+  border-radius: 0;
+  border: 0;
+  background-color: white;
+  padding: .5em;
+  font-weight: bolder;
+}
+
 /*Songs List*/
 
 .song{
@@ -449,17 +480,39 @@ input[name=rating]{
 
 
 
-@media only screen and (min-width: 900px) {
+@media only screen and (min-width: 700px) {
   #root{
     grid-template-columns: 10em 1fr 10em;
+  }
+  .form-container{
+    width: 45% !important;
   }
   .contact{
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 1em;
   }
-  .form-container{
-    width: 35%;
+
+  .album-container{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .album_cover {
+    width: 30%;
+  }
+
+  .album-details{
+    width: 60%;
+  }
+  .profile-image >img{
+    width: 5vw;
+    height: 5vw;
+  }
+
+  .profile-details{
+    font-weight: bolder;
+    font-size: 1.1rem;
   }
   .profile-image{
     width: 8%;
@@ -467,4 +520,21 @@ input[name=rating]{
 
   .active{border-bottom: 1px solid black; }
 
+}
+
+@media only screen and (min-width: 1400px) {
+  .album_cover {
+    width: 20%;
+  }
+  .album-details{
+    width: 70%;
+  }
+
+  .page-numbers{
+    left: 48%;
+  }
+
+  .form-container{
+    width: 25% !important;
+  }
 }
