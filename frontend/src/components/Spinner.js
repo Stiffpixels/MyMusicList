@@ -1,11 +1,14 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const Spinner = ()=>{
+const Spinner = ({Private})=>{
   const navigate = useNavigate()
-  setTimeout(()=>{
-    navigate("/login")
-  }, 2000)
+  if(Private){
+    setTimeout(()=>{
+      navigate("/login")
+    }, 2000)
+  }
+  
   return <div className="d-flex spinner flex-column justify-content-center align-items-center">
     <div className="spinner-border" role="status">
   </div>

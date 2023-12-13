@@ -5,7 +5,7 @@ import Spinner from '../Spinner.js'
 
 const Privateroute = ()=>{
   const [auth, setAuth] = useAuth()
-  return auth.user===false? <Spinner /> : <Outlet />
+  return auth.user===false? <Spinner Private={true} /> : <Outlet />
 }
 
 export default Privateroute

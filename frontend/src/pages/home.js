@@ -5,6 +5,7 @@ import axios from 'axios';
 import { FaPlus, FaStar } from 'react-icons/fa'
 import Modal from '../components/Modal';
 import { Link } from 'react-router-dom';
+import Spinner from '../components/Spinner'
 //import ImageSlider from '../layout/ImageSlider.js'
 
 const Home = () => {
@@ -74,7 +75,7 @@ const Home = () => {
         <div className='music-grid'>
           
           {
-            music.length===0?(<p>no music found</p> ):(
+            music.length===0?(<Spinner/> ):(
 
               
                 music.map((album, index)=>{

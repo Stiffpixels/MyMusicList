@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useState, useRef } from "react"
 import toast from "react-hot-toast"
 import axios from "axios"
 
@@ -6,6 +6,7 @@ const AdminProfile = ()=>{
     const [image, setImage] = useState({})
     const [music, setMusic] = useState({name:"", artist:"", description:"", category:""})
     const [songs, setSongs] = useState([])
+    const [numOfSongs, setNumOfSongs] = useState(1)
     
     const songsRef = useRef()
 
@@ -26,7 +27,7 @@ const AdminProfile = ()=>{
         formData.append("cover_art", image)
         formData.append("cover_art", image?.data)
         formData.append("songs", JSON.stringify(songs))
-        
+        setSongs([])
         
         Object.entries(music).forEach(([key, value])=>{
             formData.append(`${key}`, value)
@@ -51,7 +52,7 @@ const AdminProfile = ()=>{
         setImage(img)
     }
 
-    const addSongs = (e)=>{
+    const saveSongs = (e)=>{
         e.preventDefault()
         const songInputs = songsRef?.current?.querySelectorAll("input[name=songs]")
         const songsList = {}
@@ -68,9 +69,13 @@ const AdminProfile = ()=>{
 
 
     }
-    useEffect(()=>{
-        
-    }, [])
+
+    const addSong = (e)=>{
+        e.preventDefault()
+        setNumOfSongs(numOfSongs+1)
+    }
+
+    
 
     return (
         <>
@@ -85,20 +90,20 @@ const AdminProfile = ()=>{
             <div className="form-field" style={{width:'60%'}}>
                 <label className="field-text " style={{color:"black", marginBottom:".5em"}} htmlFor="songs">Songs: </label>
                 <ol className="songlist" ref={songsRef}>
-                    <li className="song">
-                        <label className="field-text profile-field-text" htmlFor="song1" style={{marginTop:"0"}}>Name:</label>
-                        <input type="text" className="field-input singleSong" name="songs" id="song1"/>
-                        <label className="field-text profile-field-text" htmlFor="credits">Credit:</label>
-                        <input type="text" className="field-input" name="songs" id="credits"/>
-                    </li>
-                    <li className="song">
-                        <label className="field-text profile-field-text" htmlFor="song2" style={{marginTop:"0"}}>Name:</label>
-                        <input type="text" className="field-input singleSong" name="songs" id="song2"/>
-                        <label className="field-text profile-field-text" htmlFor="credits">Credit:</label>
-                        <input type="text" className="field-input" name="songs" id="credits"/>
-                    </li>
-                    <div style={{textAlign:'center'}}>
-                        <button type="button" className="btn saveSongs text-light bg-secondary" onClick={(e)=>addSongs(e)} >Save</button>
+                    {
+                        [...Array(numOfSongs)].map((index)=>{
+                            console.log(index)
+                            return <li className="song" key={index}>
+                                <label className="field-text profile-field-text" htmlFor="song1" style={{marginTop:"0"}}>Name:</label>
+                                <input type="text" className="field-input singleSong" name="songs" id="song1"/>
+                                <label className="field-text profile-field-text" htmlFor="credits">Credit:</label>
+                                <input type="text" className="field-input" name="songs" id="credits"/>
+                            </li>
+                        })
+                    }
+                    <div style={{display:"flex", justifyContent:"space-between"}}>
+                        <button type="button" className="btn saveSongs text-light bg-secondary" onClick={(e)=>addSong(e)}  >Add More</button>
+                        <button type="button" className="btn addSong text-light bg-secondary" onClick={(e)=>saveSongs(e)}  >Save</button>
                     </div>
                     
                 </ol>
