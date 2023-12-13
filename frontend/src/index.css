@@ -330,6 +330,7 @@ img{
 
 .music-grid{
   margin-top: 2.5em;
+  margin-bottom: 1.5em;
   display: grid;
   grid-template-columns: repeat(auto-fill, 9em);
   gap: .5em;
@@ -390,7 +391,7 @@ img{
 
 .page-numbers{
   position: fixed;
-  bottom: 15vh;
+  bottom: 10vh;
   left: 45%;
   text-align: center;
 }

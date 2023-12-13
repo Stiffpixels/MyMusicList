@@ -5,8 +5,6 @@ import axios from 'axios';
 import { FaPlus, FaStar } from 'react-icons/fa'
 import Modal from '../components/Modal';
 import { Link } from 'react-router-dom';
-import Spinner from '../components/Spinner'
-//import ImageSlider from '../layout/ImageSlider.js'
 
 const Home = () => {
   const [ music, setMusic ] = useState([])
@@ -75,7 +73,10 @@ const Home = () => {
         <div className='music-grid'>
           
           {
-            music.length===0?(<Spinner/> ):(
+            music.length===0?(<div className="d-flex spinner flex-column justify-content-center align-items-center" style={{width:"100%", height:"100%", alignSelf:"center"}}>
+            <div className="spinner-border" role="status">
+          </div>
+          </div>):(
 
               
                 music.map((album, index)=>{
@@ -115,7 +116,6 @@ const Home = () => {
 
         </div>
         <div className="page-numbers">
-          <p style={{marginBottom:'.3em', fontWeight:'bolder'}}>page</p>
           <input type="button" className='page-btn' onClick={()=>{
             if(page===1){
               return
