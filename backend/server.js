@@ -1,7 +1,7 @@
 const app = require("./app")
-const dotenv = require('dotenv')
 const connDB = require('./config/ConnMongodb.js')
 
+const dotenv = require('dotenv')
 
 process.on('uncaughtException', (err)=>{
     console.log(`Error: ${err.message}`)
@@ -9,7 +9,12 @@ process.on('uncaughtException', (err)=>{
     process.exit(1)
 })
 
-dotenv.config({path:'backend/config/config.env'})
+if(process.env.NODE_ENV!=="Production"){
+    dotenv.config({path:'backend/config/config.env'})
+}else{
+    dotenv.config({path:'../.env'})
+}
+
 
 const port = process.env.PORT || 8080
 
