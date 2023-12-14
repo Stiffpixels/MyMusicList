@@ -69,8 +69,8 @@ const Home = () => {
 
   return (
     <Layout title="Best Place to Keep your Music Organized" keywords="Music, Music List, Indian Website" description="home page of My Music List" author="Muzammil">
-      
-        <div className='music-grid'>
+      <div className="home-container">
+      <div className='music-grid'>
           
           {
             music.length===0?(<div className="d-flex spinner flex-column justify-content-center align-items-center" style={{width:"100%", height:"100%", alignSelf:"center"}}>
@@ -115,6 +115,7 @@ const Home = () => {
          <Modal open={isModalOpen} onClose={()=>setModalOpen(false)} albumId={AlbumId}/>
 
         </div>
+        <div className="page-numbers-container">
         <div className="page-numbers">
           <input type="button" className='page-btn' onClick={()=>{
             if(page===1){
@@ -133,6 +134,10 @@ const Home = () => {
            }
           }} value=">>" />
         </div>
+        </div>
+      </div>
+        
+        
     </Layout>
   )
 }

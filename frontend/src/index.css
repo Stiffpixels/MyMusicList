@@ -328,6 +328,13 @@ img{
 
 /*Home page*/
 
+.home-container{
+  display: flex;
+  min-height: 75vh;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .music-grid{
   margin-top: 2.5em;
   margin-bottom: 1.5em;
@@ -389,9 +396,13 @@ img{
   margin-bottom:.5em;
 }
 
+.page-numbers-container{
+  position: relative;
+  height: 4em;
+}
+
 .page-numbers{
-  position: fixed;
-  bottom: 10vh;
+  position: absolute;
   left: 45%;
   text-align: center;
 }
