@@ -26,7 +26,7 @@ const registerUser = async (req,res)=>{
     user.verificationToken = VerificationToken
 
     await user.save({ validateBeforeSave: false })
-    const verificationURL = `http://${process.env.FRONTEND_HOST}/verification/${VerificationToken}`
+    const verificationURL = `${req.protocol}://${req.get("host")}/password/reset/${VerificationToken}`
     const message =`your account verification link :- \n\n ${verificationURL}  if you have not made account creation request on MyMusicList, please ignore it`
     try{
         sendEMail({
