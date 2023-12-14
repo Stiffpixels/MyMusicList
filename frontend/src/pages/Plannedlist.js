@@ -21,11 +21,13 @@ const Plannedlist = () => {
 
   useEffect(()=>{
     getUserList()
-  }, [])
+  }, [getUserList])
   return (
     <Layout title="Planning">
       <Profmenu />
-      <MusicList albums={albums} list="planning"/>
+      <MusicList albums={albums} list="planning" rerender={()=>{
+        getUserList()
+        }}/>
     </Layout>
   )
 }

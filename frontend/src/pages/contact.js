@@ -10,7 +10,7 @@ const contact = () => {
           <img src={require("./images/contactImage.jpg")} alt="Call center providing customer service" />
           <div className='contact-content'>
             <h1 className='contact-heading'>Contact</h1>
-            <p>PLease let us know about any <strong>problems</strong> you may have with our products, or want to order in <strong>bulk.</strong></p>
+            <p>PLease let us know about any <strong>issues</strong> you may have with our site, or want us to add any new albums <strong>email</strong> us about it.</p>
             <ul>
               <li><AiOutlineMail/>mymusiclist@gmail.com</li>
             </ul>

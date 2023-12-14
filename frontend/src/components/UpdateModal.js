@@ -20,7 +20,7 @@ const UpdateModal = ({open, onClose, albumId, listName, rerender}) => {
         try {
             const resp = await axios.delete(`${process.env.REACT_APP_API}/api/v1/delete/list?albumId=${albumId}&listName=${listName}`)
             if(resp.data.success){
-                toast.success('Album has been Delete')
+                toast.success('Album has been Deleted')
             }
         } catch (error) {
             console.log(error);
@@ -82,8 +82,8 @@ const UpdateModal = ({open, onClose, albumId, listName, rerender}) => {
                     </select >
                         <textarea style={{width:'100%', marginTop:'1em', minHeight:'13vh'}} name="review-comment" id="review-comment" className="music-description-boxx" value={comment} onChange={(e)=>setComment(e.target.value)}></textarea>
                         <div className='submit-btn-container'>
-                        <button type="submit" className='submit-btn' onClick={e=>UpdateList(e)} id='update'  >Update</button>
-                        <button type="submit" className='submit-btn' onClick={e=>UpdateList(e)} id='delete'  >Delete</button>
+                        <button type="submit" className='submit-btn' onClick={e=>UpdateList(e)} id='update'  style={{marginRight:'1em'}}>Update</button>
+                        <button type="submit" className='submit-btn text-danger' onClick={e=>UpdateList(e)} id='delete'  >Delete</button>
                         </div>
                         
                 </form>

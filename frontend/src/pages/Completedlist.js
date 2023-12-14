@@ -21,11 +21,13 @@ const Completedlist = () => {
 
   useEffect(()=>{
     getUserList()
-  }, [])
+  }, [getUserList])
   return (
     <Layout title="Completed">
       <Profmenu />
-      <MusicList albums={albums} list="completed"/>
+      <MusicList albums={albums} list="completed" rerender={()=>{
+        getUserList()
+        }}/>
     </Layout>
   )
 }
