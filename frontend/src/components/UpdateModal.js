@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 
 
 
-const UpdateModal = ({open, onClose, albumId, listName}) => {
+const UpdateModal = ({open, onClose, albumId, listName, rerender}) => {
   const [rating, setRating] = useState(null)
   const [hover, setHover] = useState(null)
   const [comment, setComment] = useState('')
@@ -15,14 +15,29 @@ const UpdateModal = ({open, onClose, albumId, listName}) => {
 
   const UpdateList = async (e)=>{
     e.preventDefault()
+
+    if(e.target.id ==='delete'){
+        try {
+            const resp = await axios.delete(`${process.env.REACT_APP_API}/api/v1/delete/list?albumId=${albumId}&listName=${listName}`)
+            if(resp.data.success){
+                toast.success('Album has been Delete')
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error?.reponse?.data?.message)
+        }
+        return
+    }
     try {
-        const resp = await axios.get(`${process.env.REACT_APP_API}/api/v1/update/list?albumId=${albumId}&listName=${listName}&comment=${comment}&rating=${rating}&updatedList=${updatedList}`)
+        const resp = await axios.put(`${process.env.REACT_APP_API}/api/v1/update/list?albumId=${albumId}&listName=${listName}&comment=${comment}&rating=${rating}&updatedList=${updatedList}`)
         if(resp.data.success){
             toast.success('Album has been updated')
         }
     } catch (error) {
         console.log(error);
+        toast.error(error?.reponse?.data?.message)
     }
+    rerender()
   }
 
   const btnStyles = {padding:"0.5em", border:'0'}
@@ -34,7 +49,7 @@ const UpdateModal = ({open, onClose, albumId, listName}) => {
                     Update Album
                     <button type="button" style={btnStyles} onClick={onClose}>⛌</button>
                 </div>
-                <form className="form" onSubmit={e=>UpdateList(e)} style={{display:'flex', flexDirection:'column', padding:'0', marginBottom:'1em'}}>
+                <form className="form" style={{display:'flex', flexDirection:'column', padding:'0', marginBottom:'1em'}}>
                     <div className="rating">
                     {
                         [...Array(5)].map((star, index)=>{
@@ -67,7 +82,8 @@ const UpdateModal = ({open, onClose, albumId, listName}) => {
                     </select >
                         <textarea style={{width:'100%', marginTop:'1em', minHeight:'13vh'}} name="review-comment" id="review-comment" className="music-description-boxx" value={comment} onChange={(e)=>setComment(e.target.value)}></textarea>
                         <div className='submit-btn-container'>
-                        <button type="submit" className='submit-btn'  >Update</button>
+                        <button type="submit" className='submit-btn' onClick={e=>UpdateList(e)} id='update'  >Update</button>
+                        <button type="submit" className='submit-btn' onClick={e=>UpdateList(e)} id='delete'  >Delete</button>
                         </div>
                         
                 </form>

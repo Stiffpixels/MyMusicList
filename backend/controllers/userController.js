@@ -245,10 +245,7 @@ const logoutUser = async (req,res)=>{
     album.numOfReviews += 1
     album.reviews.push({ user:user._id, rating:Rating, name:user.name})
     
-
-
     album.rating = (album.rating + rating) / album.numOfReviews
-
 
     album.save()
 
@@ -307,6 +304,46 @@ const logoutUser = async (req,res)=>{
 
  }
 
+ const deleteFromList = async (req, res)=>{
+    const {listName, albumId} = req.query
+    const user = req.user
+
+    if(!user.musicList[listName].includes(albumId)){
+        throw new ErrorHandler("Album is not in your list", 404)
+    }
+
+
+    const album =await music.findById(albumId);
+    
+    album.reviews.map((review, index)=>{
+        if(review.user==user.id){
+            album.reviews.splice(index)
+        }
+    })
+
+    album.numOfReviews -= album.numOfReviews===0?(0):(album.numOfReviews-1)
+
+    let albumRating = 0
+    album.reviews.map((review)=>{
+        albumRating += review.rating
+    })
+    album.rating = albumRating/album.numOfReviews
+
+    user.musicList[listName].map((curr, index)=>{
+        if(curr.toString()===albumId){
+            user.musicList[listName].splice(index, 1)
+        }
+    })
+
+    await album.save({validateBeforeSave:false})
+    await user.save({validateBeforeSave:false})
+
+    res.status(200).json({
+        success:true,
+        message:'Album deleted successfully'
+    })
+ }
+
  const getUserList = async (req, res)=>{
     const { list } = req.query
 
@@ -358,4 +395,4 @@ const logoutUser = async (req,res)=>{
     })
  }
 
-module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList, updateList, verifyUser }
+module.exports = { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList, updateList, deleteFromList, verifyUser }

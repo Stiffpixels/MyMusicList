@@ -8,7 +8,6 @@ const footer = () => {
       <p className='text-center'>
         <Link to='/about'>About</Link>
         <Link to='/privacyPolicy'>Privacy Policy</Link>
-        <Link to='/FAQs'>FAQs</Link>
       </p>
     </div>
   )

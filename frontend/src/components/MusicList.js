@@ -3,7 +3,7 @@ import { FaStar } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import UpdateModal from './UpdateModal'
 
-const MusicList = ({albums, list}) => {
+const MusicList = ({albums, list, rerender}) => {
   const [openModal, setOpenModal] = useState(false)
   const [albumId, setAlbumId] = useState('')
     const binToBase64 = (buffer)=>{
@@ -49,7 +49,7 @@ const MusicList = ({albums, list}) => {
                 
             )
           }
-    < UpdateModal open={openModal} onClose={()=>setOpenModal(false)} albumId={albumId} listName={list} />
+    < UpdateModal open={openModal} onClose={()=>setOpenModal(false)} albumId={albumId} listName={list} rerender={rerender}/>
     </>
   )
 }

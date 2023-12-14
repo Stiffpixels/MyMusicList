@@ -6,6 +6,7 @@ import MusicList from "../components/MusicList.js"
 
 const Currentlist = ()=>{
   const [albums, setAlbums] = useState([])
+
   const getUserList = async()=>{
     
     try {
@@ -21,11 +22,13 @@ const Currentlist = ()=>{
 
   useEffect(()=>{
     getUserList()
-  }, [])
+  }, [getUserList])
   return(
     <Layout title="Current">
       <Profmenu />
-      <MusicList albums={albums} list="current"/>
+      <MusicList albums={albums} list="current" rerender={()=>{
+        getUserList()
+        }}/>
     </Layout>
     )
 }

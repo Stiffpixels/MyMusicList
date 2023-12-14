@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage})
 
-const { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList, updateList, verifyUser } = require('../controllers/userController')
+const { registerUser, loginUser, logoutUser, forgotPassword, resetPassword, getUsers, getUserDetails, updateUserPassword, updateUserDetails, updateUserRoles, deleteUser, addToList, getUserList, updateList, deleteFromList, verifyUser } = require('../controllers/userController')
 
 const { isAuthorizedUser, authorizeRoles } = require('../middleware/auth')
 
@@ -34,7 +34,8 @@ router.route('/admin/user/:id').put(isAuthorizedUser, authorizeRoles('admin'), u
 router.route('/list').get(isAuthorizedUser, getUserList)
 
 router.route('/add/list').put(isAuthorizedUser, addToList)
-router.route('/update/list').get(isAuthorizedUser, updateList)
+router.route('/update/list').put(isAuthorizedUser, updateList)
+router.route('/delete/list').delete(isAuthorizedUser, deleteFromList)
 
 router.route('/admin/users').get(isAuthorizedUser, authorizeRoles('admin'), getUsers)
 
