@@ -45,11 +45,17 @@ const AdminProfile = ()=>{
     }
 
     const handleFileChange = (e)=>{
-        const img = {
-          preview: URL.createObjectURL(e.target.files[0]),
-          data: e.target.files[0],
-        }
-        setImage(img)
+        if((/image/).test(e.target.files[0].type)){
+            const img = {
+              preview: URL.createObjectURL(e.target.files[0]),
+              data: e.target.files[0],
+            }
+            setImage(img)
+          }
+          else{
+            toast.error('Only an image file can be selected.')
+            e.target.value = ""
+          }
     }
 
     const saveSongs = (e)=>{
@@ -92,7 +98,6 @@ const AdminProfile = ()=>{
                 <ol className="songlist" ref={songsRef}>
                     {
                         [...Array(numOfSongs)].map((index)=>{
-                            console.log(index)
                             return <li className="song" key={index}>
                                 <label className="field-text profile-field-text" htmlFor="song1" style={{marginTop:"0"}}>Name:</label>
                                 <input type="text" className="field-input singleSong" name="songs" id="song1"/>
@@ -121,7 +126,8 @@ const AdminProfile = ()=>{
                 <textarea className="music-description-box"  type="text" name="description" id="description" value={music.description} onChange={(e)=>setMusic({...music, description:e.target.value})} />
             </p>
             <p className="form-field file-input">
-                <input type='file' name='cover_art' onChange={e=>handleFileChange(e)}></input>
+            <label htmlFor="profile_pic" className="field-text profile-field-text">Album Cover: </label>
+                <input type='file' name='cover_art' onChange={e=>handleFileChange(e)} accept=".jpg, .jpeg, .png"></input>
             </p>
         <div className='submit-btn-container'>
         <button type="submit" className='submit-btn' >Submit</button>

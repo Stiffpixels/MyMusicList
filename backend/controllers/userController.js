@@ -109,7 +109,7 @@ const logoutUser = async (req,res)=>{
     const resetToken = user.getResetPasswordToken(false)
 
     await user.save({ validateBeforeSave: false })
-    const resetPasswordUrl = `http://${process.env.FRONTEND_HOST}/password/reset/${resetToken}`
+    const resetPasswordUrl = `${req.protocol}://${req.get("host")}/password/reset/${resetToken}`
 
     const message =`your password reset link :- \n\n ${resetPasswordUrl} valid for 15 minutes if you have not made request to reset your password, someone else is trying to reset your password so please ignore this email`
     try{

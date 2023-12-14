@@ -49,11 +49,19 @@ const Dashboard = ()=>{
 
   }
   const handleFileChange = (e)=>{
-    const img = {
-      preview: URL.createObjectURL(e.target.files[0]),
-      data: e.target.files[0],
+    
+    if((/image/).test(e.target.files[0].type)){
+      const img = {
+        preview: URL.createObjectURL(e.target.files[0]),
+        data: e.target.files[0],
+      }
+      setImage(img)
     }
-    setImage(img)
+    else{
+      toast.error('Only an image file can be selected.')
+      e.target.value = ""
+    }
+  
   }
   useEffect(()=>{
     const asyncFunc = async ()=>{
@@ -104,7 +112,8 @@ const Dashboard = ()=>{
       <input className='field-input' type="email" value={email} name='email' id='email' onChange={e=>setEmail(e.target.value)}  />
     </p>
     <p className="form-field file-input">
-      <input type='file' name='profile_pic' onChange={e=>handleFileChange(e)}></input>
+      <label htmlFor="profile_pic" className="field-text profile-field-text">Profile Picture: </label>
+      <input type='file' name='profile_pic' id="profile_pic" onChange={e=>handleFileChange(e)} accept=".jpg, .jpeg, .png"></input>
     </p>
 
     <div className='submit-btn-container'>
