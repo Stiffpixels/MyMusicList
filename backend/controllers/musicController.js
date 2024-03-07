@@ -1,269 +1,285 @@
-const { log } = require('console');
-const music = require('../models/musicModel')
-const ErrorHandler = require('../utils/errorHandler')
-const fs = require('fs')
+const music = require("../models/musicModel");
+const ErrorHandler = require("../utils/errorHandler");
+const fs = require("fs");
 
-const getmusic = async (req, res, next)=>{
-    const { name, fields, category, numFilters, page, limit } = req.query;
-    const qParams = {}
-    const musicCount = await music.count()
-    const pageCount = Math.ceil(musicCount /10)
-    const newLimit = Number(limit) || 10
-    if(name){
-        qParams.name = { $regex:name, $options:'i' }
-    }
+const getmusic = async (req, res, next) => {
+  const { name, fields, category, numFilters, page, limit } = req.query;
+  const qParams = {};
+  const musicCount = await music.count();
+  const pageCount = Math.ceil(musicCount / 10);
+  const newLimit = Number(limit) || 10;
+  if (name) {
+    qParams.name = { $regex: name, $options: "i" };
+  }
 
-    if(category){
-        qParams.category ={ $in: category.split(',') }
-    }
-    
-    if(numFilters){
-        const operatorMap ={
-            ">":"$gt",
-            ">=":"$gte",
-            "==":"$eq",
-            "<":"$lt",
-            "<=":"$lte"
-        }
+  if (category) {
+    qParams.category = { $in: category.split(",") };
+  }
 
-        const re = /\b(>|>=|==|<+|<)\b/g
+  if (numFilters) {
+    const operatorMap = {
+      ">": "$gt",
+      ">=": "$gte",
+      "==": "$eq",
+      "<": "$lt",
+      "<=": "$lte",
+    };
 
-        const mongoNumFilters = numFilters.replace(re, (match)=>`-${operatorMap[match]}-`)
-        
-        mongoNumFilters.split(",").map((filter)=>{
-            
-            const [ field, operator, value ] = filter.split('-')
-            if(qParams.hasOwnProperty(field)){
-                const prevQuery = qParams[field]
-                qParams[field] = {...prevQuery, [operator]:Number9=(value)}
-                return
-            }
-            qParams[field] = { [operator]:Number(value) }
-            
-        })
-        
-    }
+    const re = /\b(>|>=|==|<+|<)\b/g;
 
-    let results = music.find(qParams)
-    
-    if(Number(page)>1){
-        const skipItems = page*newLimit
-        console.log(skipItems)
-        results = results.skip(skipItems)
-    }
+    const mongoNumFilters = numFilters.replace(
+      re,
+      (match) => `-${operatorMap[match]}-`
+    );
 
-    results = results.limit(newLimit)
+    mongoNumFilters.split(",").map((filter) => {
+      const [field, operator, value] = filter.split("-");
+      if (qParams.hasOwnProperty(field)) {
+        const prevQuery = qParams[field];
+        qParams[field] = { ...prevQuery, [operator]: (Number9 = value) };
+        return;
+      }
+      qParams[field] = { [operator]: Number(value) };
+    });
+  }
 
-    
-    if(fields){
-        results = results.select(fields)
-    }
-    
-    const Music = await results
+  let results = music.find(qParams);
 
-    if(Music.length===0){
-        throw new ErrorHandler("No music found", 404)
-    }
+  if (Number(page) > 1) {
+    const skipItems = (page - 1) * newLimit;
+    console.log("Number of items skipped: ", skipItems);
+    results = results.skip(skipItems);
+  }
 
-    res.status(200).json({ success:true,Music, pageCount })
-}
+  results = results.limit(newLimit);
 
-const getmusicDetail = async (req, res)=>{
-    const { id } = req.query
-    const Music = await music.findById(id)
-    if(!Music){
-        throw new ErrorHandler("No music found with that id", 404)
-    }
-    
-    res.status(200).json({success:true,Music})
-}
+  if (fields) {
+    results = results.select(fields);
+  }
 
-const musicStatic = async(req, res)=>{
-    const musicFetched = await music.find()
-    res.status(200).json({musicFetched})
-}
+  const Music = await results;
 
-const getTrendingMusic = async (req, res)=>{
-  const dateLimit = new Date(Date.now() - 15 * 1000 * 60 * 60 * 24).toISOString().split('T')[0]
-  console.log(dateLimit)
-  const Music = await music.find({createdAt:{ $gte: dateLimit }}).find({
-    rating:{ $gte: 4},
-    numOfReviews:{ $gte: 20 }
-  })
-  res.status(200).json({message:'success', Music})
-}
+  if (Music.length === 0) {
+    throw new ErrorHandler("No music found", 404);
+  }
 
-const addmusic = async (req, res)=>{
+  res.status(200).json({ success: true, Music, pageCount });
+};
 
-    req.body.user = req.user._id
+const getmusicDetail = async (req, res) => {
+  const { id } = req.query;
+  const Music = await music.findById(id);
+  if (!Music) {
+    throw new ErrorHandler("No music found with that id", 404);
+  }
 
-    const musicdata = {...req.body}
-    delete musicdata.user
-    delete musicdata.cover_art
-    const songs = JSON.parse(musicdata.songs)
-    delete musicdata.songs
-    
-    const songsList = []
+  res.status(200).json({ success: true, Music });
+};
 
-    Object.entries(songs).forEach(([key])=>{
-        songsList.push(songs[key])
-    })
+const musicStatic = async (req, res) => {
+  const musicFetched = await music.find();
+  res.status(200).json({ musicFetched });
+};
 
-    if(req.file){
-        musicdata.image = {
-            data: fs.readFileSync(req.file.path),
-            contentType:"image/jpg"
-        }
-        fs.unlink(req.file.path, (err)=>{
-            if (err) console.log(err)
-        })
-    }
-    const Music = await music.create({ ...musicdata, songs:[...songsList] })
+const getTrendingMusic = async (req, res) => {
+  const dateLimit = new Date(Date.now() - 15 * 1000 * 60 * 60 * 24)
+    .toISOString()
+    .split("T")[0];
+  console.log(dateLimit);
+  const Music = await music.find({ createdAt: { $gte: dateLimit } }).find({
+    rating: { $gte: 4 },
+    numOfReviews: { $gte: 20 },
+  });
+  res.status(200).json({ message: "success", Music });
+};
 
-    res.status(200).json({
-        success:true,
-        //Music
-    })
-}
+const addmusic = async (req, res) => {
+  req.body.user = req.user._id;
+
+  const musicdata = { ...req.body };
+  delete musicdata.user;
+  delete musicdata.cover_art;
+  const songs = JSON.parse(musicdata.songs);
+  delete musicdata.songs;
+
+  const songsList = [];
+
+  Object.entries(songs).forEach(([key]) => {
+    songsList.push(songs[key]);
+  });
+
+  if (req.file) {
+    musicdata.image = {
+      data: fs.readFileSync(req.file.path),
+      contentType: "image/jpg",
+    };
+    fs.unlink(req.file.path, (err) => {
+      if (err) console.log(err);
+    });
+  }
+  const Music = await music.create({ ...musicdata, songs: [...songsList] });
+
+  res.status(200).json({
+    success: true,
+    //Music
+  });
+};
 
 //function to generate a mongodb query using switch conditional
-const getQuery = (field)=>{
-    const fieldList = field.split(",")
-    const fieldQuery = {}
+const getQuery = (field) => {
+  const fieldList = field.split(",");
+  const fieldQuery = {};
 
-    switch(fieldList[0]){
-        case 'name':
-            if(fieldList[1]==='notexists'){
-                fieldQuery.name = { $exists:false }
-            }else{
-                fieldQuery.name = fieldList[1]
-            }
-            break;
-        case 'price':
-            fieldQuery.price = fieldList[1]
-            break;
-        case 'category':
-            fieldQuery.category = fieldList[1]
-            break;
-        case 'rating':
-            fieldQuery.rating = Number(fieldList[1])
-            break;
-        default:
-            throw new ErrorHandler("Please provide a valid field either name, price, category, or rating")
-    }
+  switch (fieldList[0]) {
+    case "name":
+      if (fieldList[1] === "notexists") {
+        fieldQuery.name = { $exists: false };
+      } else {
+        fieldQuery.name = fieldList[1];
+      }
+      break;
+    case "price":
+      fieldQuery.price = fieldList[1];
+      break;
+    case "category":
+      fieldQuery.category = fieldList[1];
+      break;
+    case "rating":
+      fieldQuery.rating = Number(fieldList[1]);
+      break;
+    default:
+      throw new ErrorHandler(
+        "Please provide a valid field either name, price, category, or rating"
+      );
+  }
 
-    return fieldQuery
-}
+  return fieldQuery;
+};
 
 //updates single or multiple music
-const updatemusic = async (req, res)=>{
-    const { id, field } = req.query
-    let status;
-    const newValues = req.body
-    
+const updatemusic = async (req, res) => {
+  const { id, field } = req.query;
+  let status;
+  const newValues = req.body;
 
-    if(id){
-        if(req.file){
-          await Music.updateOne({_id:id}, {
-            img:{
-            data:fs.readFileSync(req.file.path),
-            contentType:'image/jpg'
-          }
-          })
-          fs.unlink(req.file.path, (err)=>{ if(err) console.log(err)})
+  if (id) {
+    if (req.file) {
+      await Music.updateOne(
+        { _id: id },
+        {
+          img: {
+            data: fs.readFileSync(req.file.path),
+            contentType: "image/jpg",
+          },
         }
-         status = await music.findOneAndUpdate({_id:req.query.id}, newValues, { new:true })
+      );
+      fs.unlink(req.file.path, (err) => {
+        if (err) console.log(err);
+      });
     }
-    if(field){
-        const fieldQuery = getQuery(field)
-        const matchedmusic = await music.find(fieldQuery)
+    status = await music.findOneAndUpdate({ _id: req.query.id }, newValues, {
+      new: true,
+    });
+  }
+  if (field) {
+    const fieldQuery = getQuery(field);
+    const matchedmusic = await music.find(fieldQuery);
 
-        if(matchedmusic.length===0){
-            throw new ErrorHandler("No music found with that field value", 404)
-        }
-
-        
-            status = await music.updateMany( fieldQuery, {$set:newValues},{ multi:true })
-         
+    if (matchedmusic.length === 0) {
+      throw new ErrorHandler("No music found with that field value", 404);
     }
-    
 
-    res.status(200).json({
-        success:true,
-        status
-    })
-}
+    status = await music.updateMany(
+      fieldQuery,
+      { $set: newValues },
+      { multi: true }
+    );
+  }
+
+  res.status(200).json({
+    success: true,
+    status,
+  });
+};
 
 //deletes single or multiple matched documents
-const deletemusic = async (req, res)=>{
-    const { id, field } = req.query
-    const music = {}
-    
-    if(id){
-        music.onemusic = await music.findOneAndDelete({_id:id})
-    }
-    if(field){
-        const fieldQuery = getQuery(field)
-        const matchedmusic = await music.find(fieldQuery)
-        
-        if(matchedmusic.length===0){
-            throw new ErrorHandler("No music found with that field value", 404)
-        }
-        
-        music.music = await music.deleteMany(fieldQuery)
-        
-        
+const deletemusic = async (req, res) => {
+  const { id, field } = req.query;
+  const music = {};
+
+  if (id) {
+    music.onemusic = await music.findOneAndDelete({ _id: id });
+  }
+  if (field) {
+    const fieldQuery = getQuery(field);
+    const matchedmusic = await music.find(fieldQuery);
+
+    if (matchedmusic.length === 0) {
+      throw new ErrorHandler("No music found with that field value", 404);
     }
 
-    res.status(200).json({
-        success:true,
-        music
-    })
+    music.music = await music.deleteMany(fieldQuery);
+  }
 
-}
+  res.status(200).json({
+    success: true,
+    music,
+  });
+};
 
-const createUpdateReview = async (req, res)=>{
-    const { rating, comment, musicId } = req.body
+const createUpdateReview = async (req, res) => {
+  const { rating, comment, musicId } = req.body;
 
-    if(!(rating && musicId )){
-        throw new ErrorHandler('Please enter rating and music ID', 500)
-    }
+  if (!(rating && musicId)) {
+    throw new ErrorHandler("Please enter rating and music ID", 500);
+  }
 
-    const review = {
-        user:req.user.id,
-        name:req.user.name,
-        rating:Number(rating),
-        comment
-    }
+  const review = {
+    user: req.user.id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  };
 
-    const music = await music.findById(musicId)
-const isReviewed = music.reviews.find(rev=> rev.user.toString() === req.user.id)
+  const music = await music.findById(musicId);
+  const isReviewed = music.reviews.find(
+    (rev) => rev.user.toString() === req.user.id
+  );
 
-    if(isReviewed){
-        music.reviews.forEach((rev)=>{
-            if(music.reviews.find(rev=> rev.user.toString() === req.user.id)){
-                rev.rating = rating
-                rev.comment = comment
-            }
-        })
-    }else{
-        music.reviews.push(review)
-        music.numOfReviews += 1
-    }
+  if (isReviewed) {
+    music.reviews.forEach((rev) => {
+      if (music.reviews.find((rev) => rev.user.toString() === req.user.id)) {
+        rev.rating = rating;
+        rev.comment = comment;
+      }
+    });
+  } else {
+    music.reviews.push(review);
+    music.numOfReviews += 1;
+  }
 
-    let avgRating=0;
-    music.reviews.forEach(rev=>{
-        avgRating += rev.rating
-    })
-    avgRating /= music.numOfReviews
-    music.ratings= avgRating
+  let avgRating = 0;
+  music.reviews.forEach((rev) => {
+    avgRating += rev.rating;
+  });
+  avgRating /= music.numOfReviews;
+  music.ratings = avgRating;
 
-    await music.save({validateBeforeSave:false})
+  await music.save({ validateBeforeSave: false });
 
-    res.status(200).json({
-        success:true,
-        music
-    })
-}
+  res.status(200).json({
+    success: true,
+    music,
+  });
+};
 
-module.exports = { getmusic, musicStatic, getmusicDetail, addmusic, updatemusic, deletemusic, createUpdateReview, getTrendingMusic }
+module.exports = {
+  getmusic,
+  musicStatic,
+  getmusicDetail,
+  addmusic,
+  updatemusic,
+  deletemusic,
+  createUpdateReview,
+  getTrendingMusic,
+};
