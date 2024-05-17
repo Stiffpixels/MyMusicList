@@ -14,6 +14,7 @@ const AdminProfile = ()=>{
 
     const handleSubmit = async (e)=>{
         e.preventDefault()
+        saveSongs()
         if(image?.data?.size>1*1000*1024){
             toast.error('Image size cannot be more than 1MB')
             return
@@ -58,8 +59,7 @@ const AdminProfile = ()=>{
           }
     }
 
-    const saveSongs = (e)=>{
-        e.preventDefault()
+    const saveSongs = ()=>{
         const songInputs = songsRef?.current?.querySelectorAll("input[name=songs]")
         const songsList = {}
 
@@ -70,10 +70,8 @@ const AdminProfile = ()=>{
                 songsList[`song${currIndex}`] = { songName:currValue.value }
             }
         })
-        console.log(songsList)
         setSongs(songsList)
-
-
+        console.log(songs)
     }
 
     const addSong = (e)=>{
@@ -86,11 +84,11 @@ const AdminProfile = ()=>{
     return (
         <>
         <div className="form-container" style={{ marginBottom:'3em'}}>
-        <form className='form'  onSubmit={e=>handleSubmit(e)}>
+        <form className='form' autoComplete="off"  onSubmit={e=>handleSubmit(e)}>
             <h3 className="form-title" style={{textTransform:"uppercase"}}>Add Music</h3>
             <p className="form-field">
                 <label className="field-text profile-field-text" htmlFor="name">Album Name: </label>
-                <input className='field-input' type="text" name="name" id="name" value={music.name} onChange={(e)=>setMusic({...music, name:e.target.value})} />
+                <input autoComplete="off" className='field-input' type="text" name="name" id="name" value={music.name} onChange={(e)=>setMusic({...music, name:e.target.value})} />
             </p>
             
             <div className="form-field" style={{width:'60%'}}>
@@ -100,26 +98,25 @@ const AdminProfile = ()=>{
                         [...Array(numOfSongs)].map((index)=>{
                             return <li className="song" key={index}>
                                 <label className="field-text profile-field-text" htmlFor="song1" style={{marginTop:"0"}}>Name:</label>
-                                <input type="text" className="field-input singleSong" name="songs" id="song1"/>
+                                <input autoComplete="off" type="text" className="field-input singleSong" name="songs" id="song1"/>
                                 <label className="field-text profile-field-text" htmlFor="credits">Credit:</label>
-                                <input type="text" className="field-input" name="songs" id="credits"/>
+                                <input autoComplete="off" type="text" className="field-input" name="songs" id="credits"/>
                             </li>
                         })
                     }
                     <div style={{display:"flex", justifyContent:"space-between"}}>
-                        <button type="button" className="btn saveSongs text-light bg-secondary" onClick={(e)=>addSong(e)}  >Add More</button>
-                        <button type="button" className="btn addSong text-light bg-secondary" onClick={(e)=>saveSongs(e)}  >Save</button>
+                        <button type="button" className="btn saveSongs text-light bg-secondary" onClick={(e)=>addSong(e)}>Add More</button>
                     </div>
                     
                 </ol>
             </div>
             <p className="form-field">
                 <label className="field-text profile-field-text" htmlFor="category">Category: </label>
-                <input className='field-input' type="text" name="category" id="category" value={music.category} onChange={(e)=>setMusic({...music, category:e.target.value})} />
+                <input autoComplete="off" className='field-input' type="text" name="category" id="category" value={music.category} onChange={(e)=>setMusic({...music, category:e.target.value})} />
             </p>
             <p className="form-field">
                 <label className="field-text profile-field-text" htmlFor="artist">Artist: </label>
-                <input className='field-input' type="text" name="artist" id="artist" value={music.artist} onChange={(e)=>setMusic({...music, artist:e.target.value})}/>
+                <input autoComplete="off" className='field-input' type="text" name="artist" id="artist" value={music.artist} onChange={(e)=>setMusic({...music, artist:e.target.value})}/>
             </p>
             <p className="form-field music-description">
                 <label className="field-text profile-field-text " htmlFor="description">Description: </label>
@@ -127,7 +124,7 @@ const AdminProfile = ()=>{
             </p>
             <p className="form-field file-input">
             <label htmlFor="profile_pic" className="field-text profile-field-text">Album Cover: </label>
-                <input type='file' name='cover_art' onChange={e=>handleFileChange(e)} accept=".jpg, .jpeg, .png"></input>
+                <input  type='file' name='cover_art' onChange={e=>handleFileChange(e)} accept=".jpg, .jpeg, .png"></input>
             </p>
         <div className='submit-btn-container'>
         <button type="submit" className='submit-btn' >Submit</button>

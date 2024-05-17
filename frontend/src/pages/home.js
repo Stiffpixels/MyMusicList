@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import Layout from "../components/layout/layout";
 import "react-slideshow-image/dist/styles.css";
 import axios from "axios";
-import { FaPlus, FaStar } from "react-icons/fa";
+import { FaPlus, FaStar, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Modal from "../components/Modal";
 import { Link } from "react-router-dom";
 
@@ -14,7 +14,7 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
 
-  const fetchData = async () => {
+  const fetchMusic = async ()=>{
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_API}/api/v1/music?page=${page}`
@@ -27,6 +27,9 @@ const Home = () => {
       console.log(error);
       setMusic([]);
     }
+  }
+
+  const fetchUser = useCallback(async () => {
     try {
       const user = await axios.get(`${process.env.REACT_APP_API}/api/v1/me`);
       if (user.data.success) {
@@ -37,7 +40,8 @@ const Home = () => {
         setUserList(current.concat(completed).concat(planned));
       }
     } catch (error) {}
-  };
+  }, []);
+
   const binToBase64 = (buffer) => {
     let binary = "";
     const bytes = [].slice.call(new Uint8Array(buffer));
@@ -45,21 +49,9 @@ const Home = () => {
     return window.btoa(binary);
   };
 
-  const getPageNumber = (e) => {
-    e.preventDefault();
-    if (page < pageCount) {
-      if (e.target.id === "page-btn-2") {
-        return page + 1;
-      } else {
-        return page + 2;
-      }
-    } else {
-      e.target.display = "none";
-    }
-  };
-
   useEffect(() => {
-    fetchData();
+    fetchUser();
+    fetchMusic();
   }, [isModalOpen, page]);
 
   return (
@@ -81,7 +73,6 @@ const Home = () => {
           ) : (
             music.map((album, index) => {
               return (
-                <>
                   <div className="music-container" key={index}>
                     <div className="album-cover">
                       <img
@@ -136,7 +127,6 @@ const Home = () => {
                       )}
                     </div>
                   </div>
-                </>
               );
             })
           )}
@@ -148,7 +138,11 @@ const Home = () => {
         </div>
         <div className="page-numbers-container">
           <div className="page-numbers">
+          <p>Page</p>
+          <div style={{display:"inline"}}>
+          <label htmlFor="page-btn-left"><FaArrowLeft/></label>
             <input
+            id="page-btn-left"
               type="button"
               className="page-btn"
               onClick={() => {
@@ -157,30 +151,20 @@ const Home = () => {
                 }
                 setPage(page - 1);
               }}
-              value="<<"
             />
+          </div>
             <input
               type="button"
               onClick={(e) => e.preventDefault()}
-              className="page-btn"
+              className="page-btn page-number"
               value={page}
               style={{ background: "lightGray", padding: "0 .2em" }}
             />
+            <div style={{display:"inline"}}>
+              <label htmlFor="page-btn-right"><FaArrowRight/></label>
             <input
               type="button"
-              onClick={(e) => setPage(Number(e.target.value))}
-              className="page-btn"
-              id="page-btn-2"
-              value={(e) => getPageNumber(e)}
-            />
-            <input
-              type="button"
-              className="page-btn"
-              onClick={(e) => setPage(Number(e.target.value))}
-              value={(e) => getPageNumber(e)}
-            />
-            <input
-              type="button"
+              id="page-btn-right"
               className="page-btn"
               onClick={(e) => {
                 if (page < pageCount) {
@@ -189,8 +173,9 @@ const Home = () => {
                   return;
                 }
               }}
-              value=">>"
             />
+            </div>
+            
           </div>
         </div>
       </div>
@@ -198,4 +183,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default memo(Home);

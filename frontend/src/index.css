@@ -333,6 +333,8 @@ img{
   min-height: 75vh;
   flex-direction: column;
   justify-content: space-between;
+  max-width: 1000px;
+  margin-inline:auto;
 }
 
 .music-grid{
@@ -402,19 +404,21 @@ img{
 }
 
 .page-numbers{
-  position: absolute;
-  left: 45%;
+  
   text-align: center;
 }
 
 .page-btn{
   background:transparent;
   border:0;
-  margin:0 .2em;
   font-weight:bolder;
 }
-.page-btn:last-child{
-  margin: 0;
+
+.page-number{
+  margin-inline: .5em;
+  margin-top: .2em;
+  padding: 0 .5em;
+  border-radius: 5px;
 }
 
 /*Album*/
