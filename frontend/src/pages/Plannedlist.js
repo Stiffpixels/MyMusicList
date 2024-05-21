@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback} from "react"
 import Layout from "../components/layout/layout.js"
 import Profmenu from "../components/Profmenu.js"
 import axios from "axios"
@@ -6,7 +6,7 @@ import MusicList from "../components/MusicList.js"
 
 const Plannedlist = () => {
   const [albums, setAlbums] = useState([])
-  const getUserList = async()=>{
+  const getUserList = useCallback(async()=>{
     
     try {
       const resp = await axios.get(`${process.env.REACT_APP_API}/api/v1/list?list=planning`)
@@ -17,7 +17,7 @@ const Plannedlist = () => {
     } catch (error) {
       console.log(error);
     }
-  }
+  })
 
   useEffect(()=>{
     getUserList()

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import toast from 'react-hot-toast'
@@ -18,7 +18,7 @@ const VerifyUser = ({children}) => {
   }
   useEffect(()=>{
     verifyUser()
-  }, [])
+  })
   return children
 }
 
