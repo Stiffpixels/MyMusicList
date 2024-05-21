@@ -59,7 +59,7 @@ const UpdateModal = ({open, onClose, albumId, listName, rerender}) => {
                                     <input
                                     type="radio"
                                     name="rating"
-                                    aria-selected={index===0?"true" : "false"}
+                                    
                                     value={currentRating}
                                     onClick={() => setRating(currentRating)} />
                                     <FaStar 

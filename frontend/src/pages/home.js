@@ -49,8 +49,8 @@ const Home = () => {
     return window.btoa(binary);
   };
 
+  fetchUser()
   useEffect(() => {
-    fetchUser();
     fetchMusic();
   }, [isModalOpen, page]);
 
