@@ -14,11 +14,9 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
 
-  const fetchMusic = async ()=>{
+  const fetchMusic = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API}/api/v1/music?page=${page}`
-      );
+      const res = await axios.get(`${process.env.REACT_APP_API}/api/v1/music?page=${page}`);
       if (res.data.success) {
         setMusic(res.data.Music);
         setPageCount(res.data.pageCount);
@@ -27,7 +25,7 @@ const Home = () => {
       console.log(error);
       setMusic([]);
     }
-  }
+  };
 
   const fetchUser = useCallback(async () => {
     try {
@@ -48,134 +46,104 @@ const Home = () => {
     bytes.forEach((b) => (binary += String.fromCharCode(b)));
     return window.btoa(binary);
   };
-
-  fetchUser()
   useEffect(() => {
     fetchMusic();
   }, [isModalOpen, page]);
-
+  useEffect(() => {
+    fetchUser();
+  }, []);
   return (
-    <Layout
-      title="Best Place to Keep your Music Organized"
-      keywords="Music, Music List, Indian Website"
-      description="home page of My Music List"
-      author="Muzammil"
-    >
+    <Layout title="Best Place to Keep your Music Organized" keywords="Music, Music List, Indian Website" description="home page of My Music List" author="Muzammil">
       <div className="home-container">
         <div className="music-grid">
           {music.length === 0 ? (
-            <div
-              className="d-flex spinner flex-column justify-content-center align-items-center"
-              style={{ width: "100%", height: "100%", alignSelf: "center" }}
-            >
+            <div className="d-flex spinner flex-column justify-content-center align-items-center" style={{ width: "100%", height: "100%", alignSelf: "center" }}>
               <div className="spinner-border" role="status"></div>
             </div>
           ) : (
             music.map((album, index) => {
               return (
-                  <div className="music-container" key={index}>
-                    <div className="album-cover">
-                      <img
-                        src={`data:image/jpg;base64,${binToBase64(
-                          album?.image?.data?.data
-                        )}`}
-                        alt="music cover"
-                      />
-                    </div>
-                    <div className="music-details">
-                      <p className="music-name">{album.name}</p>
-                      <div className="artist-and-rating">
-                        <p
-                          className="artist profile-field-text"
-                          style={{ fontSize: "1em" }}
-                        >
-                          {album.artist}
-                        </p>
-                        <p className="rating">
-                          <FaStar
-                            color="#fcb603"
-                            style={{ marginTop: "-.35em" }}
-                          />
-                          {album.rating}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="music-buttons">
-                      <Link
-                        type="button"
-                        className="view-more"
-                        to={`./album/${album._id}`}
-                      >
-                        View More
-                      </Link>
-                      {!userList.includes(album._id) && (
-                        <button
-                          type="button"
-                          className="btn bg-success text-light"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setAlbumId(album._id);
-                            setModalOpen(true);
-                          }}
-                          style={{
-                            padding: "0 .3em .17em .3em",
-                            fontSize: ".85rem",
-                          }}
-                        >
-                          <FaPlus />
-                        </button>
-                      )}
+                <div className="music-container" key={index}>
+                  <div className="album-cover">
+                    <img src={`data:image/jpg;base64,${binToBase64(album?.image?.data?.data)}`} alt="music cover" />
+                  </div>
+                  <div className="music-details">
+                    <p className="music-name">{album.name}</p>
+                    <div className="artist-and-rating">
+                      <p className="artist profile-field-text" style={{ fontSize: "1em" }}>
+                        {album.artist}
+                      </p>
+                      <p className="rating">
+                        <FaStar color="#fcb603" style={{ marginTop: "-.35em" }} />
+                        {album.rating}
+                      </p>
                     </div>
                   </div>
+                  <div className="music-buttons">
+                    <Link type="button" className="view-more" to={`./album/${album._id}`}>
+                      View More
+                    </Link>
+                    {!userList.includes(album._id) && (
+                      <button
+                        type="button"
+                        className="btn bg-success text-light"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAlbumId(album._id);
+                          setModalOpen(true);
+                        }}
+                        style={{
+                          padding: "0 .3em .17em .3em",
+                          fontSize: ".85rem",
+                        }}
+                      >
+                        <FaPlus />
+                      </button>
+                    )}
+                  </div>
+                </div>
               );
             })
           )}
-          <Modal
-            open={isModalOpen}
-            onClose={() => setModalOpen(false)}
-            albumId={AlbumId}
-          />
+          <Modal open={isModalOpen} onClose={() => setModalOpen(false)} albumId={AlbumId} />
         </div>
         <div className="page-numbers-container">
           <div className="page-numbers">
-          <p>Page</p>
-          <div style={{display:"inline"}}>
-          <label htmlFor="page-btn-left"><FaArrowLeft/></label>
-            <input
-            id="page-btn-left"
-              type="button"
-              className="page-btn"
-              onClick={() => {
-                if (page === 1) {
-                  return;
-                }
-                setPage(page - 1);
-              }}
-            />
-          </div>
-            <input
-              type="button"
-              onClick={(e) => e.preventDefault()}
-              className="page-btn page-number"
-              value={page}
-              style={{ background: "lightGray", padding: "0 .2em" }}
-            />
-            <div style={{display:"inline"}}>
-              <label htmlFor="page-btn-right"><FaArrowRight/></label>
-            <input
-              type="button"
-              id="page-btn-right"
-              className="page-btn"
-              onClick={(e) => {
-                if (page < pageCount) {
-                  setPage(page + 1);
-                } else {
-                  return;
-                }
-              }}
-            />
+            <p>Page</p>
+            <div style={{ display: "inline" }}>
+              <label htmlFor="page-btn-left">
+                <FaArrowLeft />
+              </label>
+              <input
+                id="page-btn-left"
+                type="button"
+                className="page-btn"
+                onClick={() => {
+                  if (page === 1) {
+                    return;
+                  }
+                  setPage(page - 1);
+                }}
+              />
             </div>
-            
+            <input type="button" onClick={(e) => e.preventDefault()} className="page-btn page-number" value={page} style={{ background: "lightGray", padding: "0 .2em" }} />
+            <div style={{ display: "inline" }}>
+              <label htmlFor="page-btn-right">
+                <FaArrowRight />
+              </label>
+              <input
+                type="button"
+                id="page-btn-right"
+                className="page-btn"
+                onClick={(e) => {
+                  if (page < pageCount) {
+                    setPage(page + 1);
+                  } else {
+                    return;
+                  }
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
