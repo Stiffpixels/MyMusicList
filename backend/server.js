@@ -1,4 +1,4 @@
-const app = require("./app");
+const { app } = require("./app");
 const connDB = require("./config/ConnMongodb.js");
 
 const dotenv = require("dotenv");
