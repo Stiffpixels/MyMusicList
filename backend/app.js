@@ -26,4 +26,4 @@ app.get("*", (req, res) => {
   res.send("couldn't get" + req.path);
 });
 
-export default app;
+module.exports = app;
