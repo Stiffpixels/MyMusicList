@@ -1,6 +1,6 @@
-import app from "./backend/app.js";
+import { app } from "./backend/app.js";
 import serverless from "serverless-http";
-import connDB from "./backend/config/ConnMongodb.js";
+import { connDB } from "./backend/config/ConnMongodb.js";
 import dotenv from "dotenv";
 
 process.on("uncaughtException", (err) => {
