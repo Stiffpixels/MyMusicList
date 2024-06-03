@@ -1,2 +1,3 @@
-const server = require("../server.js");
-module.exports = server;
+const app = require("../server.js");
+
+module.exports = app;
