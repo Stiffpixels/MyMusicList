@@ -8,7 +8,8 @@
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix ./frontend",
     "build": "npm run build --prefix ./frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "vercel-build": "echo Server building..."
   },
   "keywords": [],
   "author": "",
