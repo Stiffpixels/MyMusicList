@@ -1,6 +1,7 @@
 const music = require("../models/musicModel");
 const ErrorHandler = require("../utils/errorHandler");
 const fs = require("fs");
+const uploadAnImage = require("../utils/cloudinary");
 
 const getmusic = async (req, res, next) => {
   const { name, fields, category, numFilters, page, limit } = req.query;
@@ -27,10 +28,7 @@ const getmusic = async (req, res, next) => {
 
     const re = /\b(>|>=|==|<+|<)\b/g;
 
-    const mongoNumFilters = numFilters.replace(
-      re,
-      (match) => `-${operatorMap[match]}-`
-    );
+    const mongoNumFilters = numFilters.replace(re, (match) => `-${operatorMap[match]}-`);
 
     mongoNumFilters.split(",").map((filter) => {
       const [field, operator, value] = filter.split("-");
@@ -82,9 +80,7 @@ const musicStatic = async (req, res) => {
 };
 
 const getTrendingMusic = async (req, res) => {
-  const dateLimit = new Date(Date.now() - 15 * 1000 * 60 * 60 * 24)
-    .toISOString()
-    .split("T")[0];
+  const dateLimit = new Date(Date.now() - 15 * 1000 * 60 * 60 * 24).toISOString().split("T")[0];
   console.log(dateLimit);
   const Music = await music.find({ createdAt: { $gte: dateLimit } }).find({
     rating: { $gte: 4 },
@@ -94,10 +90,12 @@ const getTrendingMusic = async (req, res) => {
 };
 
 const addmusic = async (req, res) => {
-  req.body.user = req.user._id;
-
-  const musicdata = { ...req.body };
-  delete musicdata.user;
+  if (!req.file) {
+    return;
+  }
+  const public_id = await uploadAnImage(req.file.path);
+  const musicdata = { ...req.body, image: { public_id } };
+  musicdata.admin = req.user._id;
   delete musicdata.cover_art;
   const songs = JSON.parse(musicdata.songs);
   delete musicdata.songs;
@@ -108,20 +106,11 @@ const addmusic = async (req, res) => {
     songsList.push(songs[key]);
   });
 
-  if (req.file) {
-    musicdata.image = {
-      data: fs.readFileSync(req.file.path),
-      contentType: "image/jpg",
-    };
-    fs.unlink(req.file.path, (err) => {
-      if (err) console.log(err);
-    });
-  }
   const Music = await music.create({ ...musicdata, songs: [...songsList] });
 
   res.status(200).json({
     success: true,
-    //Music
+    Music,
   });
 };
 
@@ -148,9 +137,7 @@ const getQuery = (field) => {
       fieldQuery.rating = Number(fieldList[1]);
       break;
     default:
-      throw new ErrorHandler(
-        "Please provide a valid field either name, price, category, or rating"
-      );
+      throw new ErrorHandler("Please provide a valid field either name, price, category, or rating");
   }
 
   return fieldQuery;
@@ -189,11 +176,7 @@ const updatemusic = async (req, res) => {
       throw new ErrorHandler("No music found with that field value", 404);
     }
 
-    status = await music.updateMany(
-      fieldQuery,
-      { $set: newValues },
-      { multi: true }
-    );
+    status = await music.updateMany(fieldQuery, { $set: newValues }, { multi: true });
   }
 
   res.status(200).json({
@@ -242,9 +225,7 @@ const createUpdateReview = async (req, res) => {
   };
 
   const music = await music.findById(musicId);
-  const isReviewed = music.reviews.find(
-    (rev) => rev.user.toString() === req.user.id
-  );
+  const isReviewed = music.reviews.find((rev) => rev.user.toString() === req.user.id);
 
   if (isReviewed) {
     music.reviews.forEach((rev) => {

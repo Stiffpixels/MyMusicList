@@ -1,74 +1,78 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
-const musicSch = new mongoose.Schema({
-    name:{
-        type:String,
-        required:[true, 'Please provide a name']
+const musicSch = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Please provide a name"],
     },
-    artist:{
-        type:String,
-        required:[true, 'Please provide a price']
+    artist: {
+      type: String,
+      required: [true, "Please provide a price"],
     },
-    description:{
-        type:String,
-        required:[true, 'Please provide a description']
+    description: {
+      type: String,
+      required: [true, "Please provide a description"],
     },
-    songs:[
-            {
-                songName:{
-                    type:String,
-                    required:[true, "Provide a name for the song"],
-                    
-                },
-                credits:{
-                    type:String
-                }
-            }
-    ],
-    image:{
-            data:Buffer,
-            contentType:String
+    songs: [
+      {
+        songName: {
+          type: String,
+          required: [true, "Provide a name for the song"],
         },
-    user:{
-        type:mongoose.Schema.ObjectId,
-        ref:"user",
-        //required:true,
-    },
-    numOfReviews:{
-        type:Number,
-        default:0
-    },
-    reviews:[
-        {
-            user:{
-                type:mongoose.Schema.ObjectId,
-                ref:"user",
-                required:true
-            },
-            rating:{
-                type:Number,
-                default:0
-            },
-            name:{
-                type:String
-            },
-            comment:{
-                type:String
-            }
-        }
+        credits: {
+          type: String,
+        },
+      },
     ],
-    rating:{
-        type:Number,
-        default:0
+    image: {
+      public_id: {
+        type: String,
+        required: [true, "Please provide a public id"],
+      },
     },
-    createdAt:{
-        type:Date,
-        default:Date.now()
+    admin: {
+      type: mongoose.Schema.ObjectId,
+      ref: "user",
+      //required:true,
     },
-    category:{
-        type:String,
-        required:[true, "PLease enter a category for the music"]
-    }
-}, {collection:'music'})
+    numOfReviews: {
+      type: Number,
+      default: 0,
+    },
+    reviews: [
+      {
+        user: {
+          type: mongoose.Schema.ObjectId,
+          ref: "user",
+          required: true,
+        },
+        rating: {
+          type: Number,
+          default: 0,
+        },
+        name: {
+          type: String,
+        },
+        comment: {
+          type: String,
+        },
+      },
+    ],
+    rating: {
+      type: Number,
+      default: 0,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+    category: {
+      type: String,
+      required: [true, "PLease enter a category for the music"],
+    },
+  },
+  { collection: "music" }
+);
 
-module.exports = mongoose.model('music', musicSch)
+module.exports = mongoose.model("music", musicSch);
