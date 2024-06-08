@@ -11,11 +11,10 @@ cloudinary.config({
 
 const uploadAnImage = async (imagePath) => {
   try {
-    const response = await cloudinary.uploader.upload(imagePath);
-    fs.unlink(imagePath);
-    return response.public_id;
+    const public_id = (await cloudinary.uploader.upload(imagePath)).public_id;
+    return public_id;
   } catch (error) {
-    fs.unlink(imagePath, (error) => console.log(error));
+    fs.unlink(imagePath, (error) => console.log("There was an error while uploading the file."));
   }
 };
 

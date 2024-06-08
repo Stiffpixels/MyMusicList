@@ -95,6 +95,10 @@ const addmusic = async (req, res) => {
   }
   const public_id = await uploadAnImage(req.file.path);
   const musicdata = { ...req.body, image: { public_id } };
+  fs.unlink(req.file.path, (error) => {
+    if (error) throw new ErrorHandler("File could not be deleted");
+  });
+
   musicdata.admin = req.user._id;
   delete musicdata.cover_art;
   const songs = JSON.parse(musicdata.songs);
