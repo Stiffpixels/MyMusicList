@@ -65,7 +65,7 @@ const Home = () => {
               return (
                 <div className="music-container" key={index}>
                   <div className="album-cover">
-                    <img src={`data:image/jpg;base64,${binToBase64(album?.image?.data?.data)}`} alt="music cover" />
+                    <img src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/${album.image.public_id}`} alt="music cover" />
                   </div>
                   <div className="music-details">
                     <p className="music-name">{album.name}</p>
