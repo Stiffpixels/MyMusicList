@@ -16,13 +16,6 @@ const Dashboard = () => {
   const [email, setEmail] = useState("");
   const [image, setImage] = useState({ preview: "", data: "" });
 
-  const binToBase64 = (buffer) => {
-    let binary = "";
-    const bytes = [].slice.call(new Uint8Array(buffer));
-    bytes.forEach((b) => (binary += String.fromCharCode(b)));
-    return window.btoa(binary);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -83,7 +76,7 @@ const Dashboard = () => {
         <div className="form-container" style={{ width: "100%", margin: "0" }}>
           <section className="form profile-container">
             <div className="profile-image">
-              <img src={`data:image/jpg;base64,${binToBase64(user?.avatar?.img?.data?.data)}`} alt=" profile" />
+              <img src={`https://res.cloudinary.com/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload/${user?.avatar?.public_id}`} alt=" profile" />
             </div>
 
             <div className="profile-details">
