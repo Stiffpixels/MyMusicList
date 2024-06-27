@@ -210,11 +210,13 @@ const updateUserDetails = async (req, res) => {
     req.user.email = req.body.email;
   }
   if (req.file) {
-    req.user.avatar.public_id = await uploadImage(req.file.path);
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    const dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    req.user.avatar.public_id = await uploadImage(dataURI);
   }
   await req.user.save();
 
-  sendToken(req.user, 200, res);
+  res.status(200).json({ success: true });
 };
 
 const addToList = async (req, res) => {

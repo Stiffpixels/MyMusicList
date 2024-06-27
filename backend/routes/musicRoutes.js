@@ -1,19 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const { isAuthorizedUser, authorizeRoles } = require("../middleware/auth");
-const path = require("path");
-
 const multer = require("multer");
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "/uploads/"));
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-  },
-});
-
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
+
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, path.join(__dirname, "/uploads/"));
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+//   },
+// });
 
 const { getmusic, musicStatic, getmusicDetail, addmusic, updatemusic, deletemusic, createUpdateReview, getTrendingMusic } = require("../controllers/musicController");
 

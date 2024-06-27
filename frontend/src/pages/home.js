@@ -40,12 +40,12 @@ const Home = () => {
     } catch (error) {}
   }, []);
 
-  const binToBase64 = (buffer) => {
-    let binary = "";
-    const bytes = [].slice.call(new Uint8Array(buffer));
-    bytes.forEach((b) => (binary += String.fromCharCode(b)));
-    return window.btoa(binary);
-  };
+  // const binToBase64 = (buffer) => {
+  //   let binary = "";
+  //   const bytes = [].slice.call(new Uint8Array(buffer));
+  //   bytes.forEach((b) => (binary += String.fromCharCode(b)));
+  //   return window.btoa(binary);
+  // };
   useEffect(() => {
     fetchMusic();
   }, [isModalOpen, page]);
@@ -80,7 +80,7 @@ const Home = () => {
                     </div>
                   </div>
                   <div className="music-buttons">
-                    <Link type="button" className="view-more" to={`./album/${album._id}`}>
+                    <Link type="button" className="view-more" to={`./album/${album._id}`} state={{ album }}>
                       View More
                     </Link>
                     {!userList.includes(album._id) && (

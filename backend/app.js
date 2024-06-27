@@ -4,7 +4,6 @@ require("express-async-errors");
 const errorMiddleware = require("./middleware/errMiddleware");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const path = require("path");
 
 //route imports
 const musicRouter = require("./routes/musicRoutes");

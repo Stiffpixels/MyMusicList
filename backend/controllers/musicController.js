@@ -1,6 +1,5 @@
 const music = require("../models/musicModel");
 const ErrorHandler = require("../utils/errorHandler");
-const fs = require("fs");
 const uploadAnImage = require("../utils/cloudinary");
 
 const getmusic = async (req, res, next) => {
@@ -91,13 +90,12 @@ const getTrendingMusic = async (req, res) => {
 
 const addmusic = async (req, res) => {
   if (!req.file) {
-    return;
+    throw new ErrorHandler("Please provide an album cover");
   }
-  const public_id = await uploadAnImage(req.file.path);
+  let b64 = Buffer.from(req.file.buffer).toString("base64");
+  let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+  const public_id = await uploadAnImage(dataURI);
   const musicdata = { ...req.body, image: { public_id } };
-  fs.unlink(req.file.path, (error) => {
-    if (error) throw new ErrorHandler("File could not be deleted");
-  });
 
   musicdata.admin = req.user._id;
   delete musicdata.cover_art;
